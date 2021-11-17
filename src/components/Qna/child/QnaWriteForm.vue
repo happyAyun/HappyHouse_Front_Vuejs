@@ -16,6 +16,7 @@
               type="text"
               required
               placeholder="작성자 입력..."
+              ref="writer"
             ></b-form-input>
           </b-form-group>
 
@@ -31,6 +32,7 @@
               type="text"
               required
               placeholder="제목 입력..."
+              ref="title"
             ></b-form-input>
           </b-form-group>
 
@@ -41,6 +43,7 @@
               placeholder="내용 입력..."
               rows="10"
               max-rows="15"
+              ref="content"
             ></b-form-textarea>
           </b-form-group>
 
@@ -98,10 +101,10 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.article.writer &&
-        ((msg = "작성자 입력해주세요"),
-        (err = false),
-        this.$refs.writer.focus());
+      // !this.article.writer &&
+      //   ((msg = "작성자 입력해주세요"),
+      //   (err = false),
+      //   this.$refs.writer.focus());
       err &&
         !this.article.subject &&
         ((msg = "제목 입력해주세요"),
@@ -142,7 +145,7 @@ export default {
     },
     modifyArticle() {
       http
-        .put(`/qna/${this.article.articleno}`, {
+        .put(`/qna`, {
           articleno: this.article.articleno,
           writer: this.article.writer,
           subject: this.article.subject,

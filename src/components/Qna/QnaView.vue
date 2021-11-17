@@ -42,7 +42,7 @@
           </b-card>
         </b-col>
       </b-row>
-      <qna-reply />
+      <qna-reply :no="article.articleno" />
     </b-container>
   </div>
 </template>

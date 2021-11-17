@@ -68,6 +68,6 @@ export default {
 }
 .tdSubject {
   width: 300px;
-  text-align: left;
+  text-align: center;
 }
 </style>
