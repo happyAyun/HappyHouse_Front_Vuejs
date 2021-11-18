@@ -6,17 +6,17 @@
           <b-form-group
             id="writer-group"
             label="작성자:"
-            label-for="userid"
+            label-for="writer"
             description="작성자를 입력하세요."
           >
             <b-form-input
-              id="userid"
-              :disabled="isUserid"
-              v-model="article.userid"
+              id="writer"
+              :disabled="isWriter"
+              v-model="article.writer"
               type="text"
               required
               placeholder="작성자 입력..."
-              ref="userid"
+              ref="writer"
             ></b-form-input>
           </b-form-group>
 
@@ -27,12 +27,12 @@
             description="제목을 입력하세요."
           >
             <b-form-input
-              id="subject"
+              id="title"
               v-model="article.subject"
               type="text"
               required
               placeholder="제목 입력..."
-              ref="subject"
+              ref="title"
             ></b-form-input>
           </b-form-group>
 
@@ -65,19 +65,19 @@
 </template>
 
 <script>
-import { writeArticle, getArticle, modifyArticle } from "@/api/qna";
+import http from "@/util/http-common";
 
 export default {
-  name: "QnaWriteForm",
+  name: "NoticeWriteForm",
   data() {
     return {
       article: {
         articleno: 0,
-        userid: "",
+        writer: "",
         subject: "",
         content: "",
       },
-      isUserid: false, // ???????
+      isWriter: false,
     };
   },
   props: {
@@ -85,20 +85,14 @@ export default {
   },
   created() {
     if (this.type === "modify") {
-      getArticle(
-        this.$route.params.articleno,
-        ({ data }) => {
-          // this.article.no = data.article.no;
-          // this.article.writer = data.article.writer;
-          // this.article.title = data.article.title;
-          // this.article.content = data.article.content;
-          this.article = data;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-      this.isUserid = true;
+      http.get(`/notice/${this.$route.params.articleno}`).then(({ data }) => {
+        // this.article.no = data.article.no;
+        // this.article.writer = data.article.writer;
+        // this.article.title = data.article.title;
+        // this.article.content = data.article.content;
+        this.article = data;
+      });
+      this.isWriter = true;
     }
   },
   methods: {
@@ -107,10 +101,10 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.article.writer &&
-        ((msg = "작성자 입력해주세요"),
-        (err = false),
-        this.$refs.userid.focus());
+      // !this.article.writer &&
+      //   ((msg = "작성자 입력해주세요"),
+      //   (err = false),
+      //   this.$refs.writer.focus());
       err &&
         !this.article.subject &&
         ((msg = "제목 입력해주세요"),
@@ -131,52 +125,44 @@ export default {
       this.article.articleno = 0;
       this.article.subject = "";
       this.article.content = "";
-      this.$router.push({ name: "QnaList" });
+      this.$router.push({ name: "NoticeList" });
     },
     registArticle() {
-      writeArticle(
-        {
+      http
+        .post(`/notice`, {
           writer: this.article.writer,
           subject: this.article.subject,
           content: this.article.content,
-        },
-        ({ data }) => {
+        })
+        .then(({ data }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);
           this.moveList();
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+        });
     },
     modifyArticle() {
-      modifyArticle(
-        {
+      http
+        .put(`/notice`, {
           articleno: this.article.articleno,
           writer: this.article.writer,
           subject: this.article.subject,
           content: this.article.content,
-        },
-        ({ data }) => {
+        })
+        .then(({ data }) => {
           let msg = "수정 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "수정이 완료되었습니다.";
           }
           alert(msg);
           // 현재 route를 /list로 변경.
-          this.$router.push({ name: "QnaList" });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+          this.$router.push({ name: "NoticeList" });
+        });
     },
     moveList() {
-      this.$router.push({ name: "QnaList" });
+      this.$router.push({ name: "NoticeList" });
     },
   },
 };

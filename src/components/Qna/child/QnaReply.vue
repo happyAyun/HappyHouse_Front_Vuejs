@@ -9,9 +9,10 @@
 </template>
 
 <script>
-import http from "@/util/http-common";
+import { listReply } from "@/api/qnaReply.js";
 import QnaReplyWrite from "./QnaReplyWrite.vue";
 import QnaReplyItem from "./QnaReplyItem.vue";
+
 export default {
   name: "QnaReply",
   props: {
@@ -35,10 +36,16 @@ export default {
     },
   },
   created() {
-    http.get(`/reply/${this.$route.params.no}`).then(({ data }) => {
-      this.replies = data;
-      console.log(this.replies);
-    });
+    listReply(
+      this.$route.params.no,
+      ({ data }) => {
+        this.replies = data;
+        console.log(this.replies);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   },
 };
 </script>

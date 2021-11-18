@@ -15,8 +15,8 @@
 </template>
 
 <script>
+import { deleteReply } from "@/api/qnaReply.js";
 import moment from "moment";
-import http from "@/util/http-common";
 export default {
   name: "QnaReplyItem",
   props: {
@@ -30,15 +30,20 @@ export default {
   },
   methods: {
     deleteReply() {
-      http.delete(`/reply/${this.Obj.id}`).then(({ data }) => {
-        let msg = "삭제 처리시 문제가 발생했습니다.";
-        if (data === "success") {
-          msg = "삭제가 완료되었습니다.";
+      deleteReply(
+        this.Obj.id,
+        ({ data }) => {
+          let msg = "삭제 처리시 문제가 발생했습니다.";
+          if (data === "success") {
+            msg = "삭제가 완료되었습니다.";
+          }
+          alert(msg);
+        },
+        (error) => {
+          console.log(error);
         }
-        alert(msg);
-      });
+      );
     },
-    modifyReply() {},
   },
 };
 </script>

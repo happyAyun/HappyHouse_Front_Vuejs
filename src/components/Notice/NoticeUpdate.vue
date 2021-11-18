@@ -1,9 +1,23 @@
 <template>
-  <div></div>
+  <b-container class="bv-example-row mt-3">
+    <b-row>
+      <b-col>
+        <b-alert show><h3>글작성</h3></b-alert>
+      </b-col>
+    </b-row>
+    <notice-write-form type="modify" />
+  </b-container>
 </template>
 
 <script>
-export default {};
+import NoticeWriteForm from "./child/NoticeWriteForm.vue";
+
+export default {
+  name: "NoticeUpdate",
+  components: {
+    NoticeWriteForm,
+  },
+};
 </script>
 
 <style></style>

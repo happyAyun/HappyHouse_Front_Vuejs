@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import http from "@/util/http-common";
+import { writeReply } from "@/api/qnaReply.js";
 export default {
   name: "QnaReplyWrite",
   props: { no: Number },
@@ -26,20 +26,24 @@ export default {
   methods: {
     createComment() {
       console.log("실행!!");
-      http
-        .post(`/reply`, {
+      writeReply(
+        {
           articleno: this.no,
           userid: "",
           subject: "",
           content: this.context,
-        })
-        .then(({ data }) => {
+        },
+        ({ data }) => {
           let msg = "답변 작성시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "답변이 등록되었습니다.";
           }
           alert(msg);
-        });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
 };

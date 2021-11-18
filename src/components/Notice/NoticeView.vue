@@ -1,42 +1,100 @@
 <template>
   <div>
-    <div id="content-wrapper">
-      <div class="p-5">
-        <div class="container mt-5">
-          <h4>공지사항 조회</h4>
-          <table class="table table-bordered mt-4">
-            <tbody>
-              <tr>
-                <th class="table-dark col-4">작성자</th>
-                <td>${article.userId}</td>
-              </tr>
-              <tr>
-                <th class="table-dark col-4">제목</th>
-                <td>${article.subject}</td>
-              </tr>
-              <tr>
-                <th class="table-dark col-4">내용</th>
-                <td>${article.content}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="mb-5 col-lg-10">
-            <button
-              type="button"
-              id="mvlistBtn"
-              class="btn btn-primary float-right"
-            >
-              목록이동
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <b-container class="bv-example-row mt-3">
+      <b-row>
+        <b-col>
+          <b-alert show><h3>글보기</h3></b-alert>
+        </b-col>
+      </b-row>
+      <b-row class="mb-1">
+        <b-col class="text-left">
+          <b-button variant="outline-primary" @click="listArticle"
+            >목록</b-button
+          >
+        </b-col>
+        <b-col class="text-right">
+          <b-button
+            variant="outline-info"
+            size="sm"
+            @click="moveModifyArticle"
+            class="mr-2"
+            >글수정</b-button
+          >
+          <b-button variant="outline-danger" size="sm" @click="deleteArticle"
+            >글삭제</b-button
+          >
+        </b-col>
+      </b-row>
+      <b-row class="mb-1">
+        <b-col>
+          <b-card
+            :header-html="
+              `<h3>${article.articleno}.
+          ${article.subject}</h3><div><h6>${article.writer}</div><div>${changeDateFormat}</h6></div>`
+            "
+            class="mb-2"
+            border-variant="dark"
+            no-body
+          >
+            <b-card-body class="text-left">
+              <div v-html="message"></div>
+            </b-card-body>
+          </b-card>
+        </b-col>
+      </b-row>
+      <qna-reply :no="article.articleno" />
+    </b-container>
   </div>
 </template>
 
 <script>
-export default {};
+import moment from "moment";
+import http from "@/util/http-common.js";
+
+export default {
+  data() {
+    return {
+      article: {},
+    };
+  },
+  computed: {
+    message() {
+      if (this.article.content)
+        return this.article.content.split("\n").join("<br>");
+      return "";
+    },
+    changeDateFormat() {
+      return moment(new Date(this.article.regtime)).format(
+        "YYYY.MM.DD hh:mm:ss"
+      );
+    },
+  },
+  created() {
+    http.get(`/notice/${this.$route.params.no}`).then(({ data }) => {
+      this.article = data;
+    });
+  },
+  methods: {
+    listArticle() {
+      this.$router.push({ name: "NoticeList" });
+    },
+    moveModifyArticle() {
+      this.$router.replace({
+        name: "NoticeUpdate",
+        params: { articleno: this.article.articleno },
+      });
+      //   this.$router.push({ path: `/board/modify/${this.article.articleno}` });
+    },
+    deleteArticle() {
+      if (confirm("정말로 삭제?")) {
+        this.$router.replace({
+          name: "NoticeDelete",
+          params: { articleno: this.article.articleno },
+        });
+      }
+    },
+  },
+};
 </script>
 
 <style></style>
