@@ -107,17 +107,10 @@ export default {
 
       let err = true;
       let msg = "";
-<<<<<<< HEAD
       !this.article.userid &&
         ((msg = "작성자 입력해주세요"),
         (err = false),
         this.$refs.userid.focus());
-=======
-      // !this.article.writer &&
-      //   ((msg = "작성자 입력해주세요"),
-      //   (err = false),
-      //   this.$refs.userid.focus());
->>>>>>> 2b15ea41896e4b507f9f866a9c6041794f41d0a6
       err &&
         !this.article.subject &&
         ((msg = "제목 입력해주세요"),
