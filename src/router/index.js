@@ -9,13 +9,11 @@ import NoticeList from "@/components/Notice/NoticeList.vue";
 import NoticeWrite from "@/components/Notice/NoticeWrite.vue";
 import NoticeView from "@/components/Notice/NoticeView.vue";
 import NoticeUpdate from "@/components/Notice/NoticeUpdate.vue";
-import NoticeDelete from "@/components/Notice/NoticeDelete.vue";
 
 import QnaList from "@/components/Qna/QnaList.vue";
 import QnaWrite from "@/components/Qna/QnaWrite.vue";
 import QnaView from "@/components/Qna/QnaView.vue";
 import QnaUpdate from "@/components/Qna/QnaUpdate.vue";
-import QnaDelete from "@/components/Qna/QnaDelete.vue";
 
 Vue.use(VueRouter);
 
@@ -51,11 +49,6 @@ const routes = [
         name: "NoticeUpdate",
         component: NoticeUpdate,
       },
-      {
-        path: "delete/:no",
-        name: "NoticeDelete",
-        component: NoticeDelete,
-      },
     ],
   },
   {
@@ -83,11 +76,6 @@ const routes = [
         path: "update/:no",
         name: "QnaUpdate",
         component: QnaUpdate,
-      },
-      {
-        path: "delete/:no",
-        name: "QnaDelete",
-        component: QnaDelete,
       },
     ],
   },

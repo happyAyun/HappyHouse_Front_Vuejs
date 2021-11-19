@@ -6,17 +6,17 @@
           <b-form-group
             id="writer-group"
             label="작성자:"
-            label-for="writer"
+            label-for="userid"
             description="작성자를 입력하세요."
           >
             <b-form-input
-              id="writer"
-              :disabled="isWriter"
-              v-model="article.writer"
+              id="userid"
+              :disabled="isUserid"
+              v-model="article.userid"
               type="text"
               required
               placeholder="작성자 입력..."
-              ref="writer"
+              ref="userid"
             ></b-form-input>
           </b-form-group>
 
@@ -27,12 +27,12 @@
             description="제목을 입력하세요."
           >
             <b-form-input
-              id="title"
+              id="subject"
               v-model="article.subject"
               type="text"
               required
               placeholder="제목 입력..."
-              ref="title"
+              ref="subject"
             ></b-form-input>
           </b-form-group>
 
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import http from "@/util/http-common";
+import { writeArticle, getArticle, modifyArticle } from "@/api/notice";
 
 export default {
   name: "NoticeWriteForm",
@@ -73,11 +73,11 @@ export default {
     return {
       article: {
         articleno: 0,
-        writer: "",
+        userid: "",
         subject: "",
         content: "",
       },
-      isWriter: false,
+      isUserid: false, // ???????
     };
   },
   props: {
@@ -85,14 +85,20 @@ export default {
   },
   created() {
     if (this.type === "modify") {
-      http.get(`/notice/${this.$route.params.articleno}`).then(({ data }) => {
-        // this.article.no = data.article.no;
-        // this.article.writer = data.article.writer;
-        // this.article.title = data.article.title;
-        // this.article.content = data.article.content;
-        this.article = data;
-      });
-      this.isWriter = true;
+      getArticle(
+        this.$route.params.articleno,
+        ({ data }) => {
+          // this.article.no = data.article.no;
+          // this.article.writer = data.article.writer;
+          // this.article.title = data.article.title;
+          // this.article.content = data.article.content;
+          this.article = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      this.isUserid = true;
     }
   },
   methods: {
@@ -101,10 +107,10 @@ export default {
 
       let err = true;
       let msg = "";
-      // !this.article.writer &&
-      //   ((msg = "작성자 입력해주세요"),
-      //   (err = false),
-      //   this.$refs.writer.focus());
+      !this.article.userid &&
+        ((msg = "작성자 입력해주세요"),
+        (err = false),
+        this.$refs.userid.focus());
       err &&
         !this.article.subject &&
         ((msg = "제목 입력해주세요"),
@@ -128,30 +134,34 @@ export default {
       this.$router.push({ name: "NoticeList" });
     },
     registArticle() {
-      http
-        .post(`/notice`, {
-          writer: this.article.writer,
+      writeArticle(
+        {
+          userid: this.article.userid,
           subject: this.article.subject,
           content: this.article.content,
-        })
-        .then(({ data }) => {
+        },
+        ({ data }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);
           this.moveList();
-        });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     modifyArticle() {
-      http
-        .put(`/notice`, {
+      modifyArticle(
+        {
           articleno: this.article.articleno,
-          writer: this.article.writer,
+          userid: this.article.userid,
           subject: this.article.subject,
           content: this.article.content,
-        })
-        .then(({ data }) => {
+        },
+        ({ data }) => {
           let msg = "수정 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "수정이 완료되었습니다.";
@@ -159,7 +169,11 @@ export default {
           alert(msg);
           // 현재 route를 /list로 변경.
           this.$router.push({ name: "NoticeList" });
-        });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     moveList() {
       this.$router.push({ name: "NoticeList" });

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import http from "@/util/http-common";
+import { listArticle } from "@/api/notice";
 
 export default {
   name: "NoticeList",
@@ -40,15 +40,31 @@ export default {
       fields: [
         { key: "articleno", label: "글번호", tdClass: "tdClass" },
         { key: "subject", label: "제목", tdClass: "tdSubject" },
-        { key: "writer", label: "작성자", tdClass: "tdClass" },
+        { key: "userid", label: "작성자", tdClass: "tdClass" },
         { key: "regtime", label: "작성일", tdClass: "tdClass" },
+        { key: "count", label: "조회수", tdClass: "tdClass" },
       ],
     };
   },
   created() {
-    http.get(`/notice`).then(({ data }) => {
-      this.articles = data;
-    });
+    let param = {
+      pg: 1,
+      spp: 10,
+      key: null,
+      word: null,
+    };
+    listArticle(
+      param,
+      (response) => {
+        this.articles = response.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    // http.get(`/qna`).then(({ data }) => {
+    //   this.articles = data;
+    // });
   },
   methods: {
     moveWrite() {
@@ -57,7 +73,7 @@ export default {
     viewArticle(article) {
       this.$router.push({
         name: "NoticeView",
-        params: { no: article.articleno },
+        params: { articleno: article.articleno },
       });
     },
   },

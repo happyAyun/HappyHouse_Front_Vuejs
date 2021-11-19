@@ -1,32 +1,34 @@
 <template>
   <b-tr>
-    <b-td>{{ no }}</b-td>
+    <b-td>{{ articleno }}</b-td>
     <b-th class="text-left">
-      <router-link :to="{ name: 'NoticeView', params: { no: no } }">{{
-        title
-      }}</router-link>
+      <router-link
+        :to="{ name: 'QnaView', params: { articleno: articleno } }"
+        >{{ subject }}</router-link
+      >
     </b-th>
     <b-td>{{ hit }}</b-td>
-    <b-td>{{ writer }}</b-td>
-    <b-td>{{ changeDateFormat }}</b-td>
+    <b-td>{{ userid }}</b-td>
+    <b-td>{{ regtime }}</b-td>
   </b-tr>
 </template>
 
 <script>
-import moment from "moment";
+// import moment from "moment";
 
 export default {
   name: "NoticeListRow",
   props: {
     articleno: Number,
-    writer: String,
+    userid: String,
     subject: String,
     regtime: String,
+    count: Number,
   },
   computed: {
-    changeDateFormat() {
-      return moment(new Date(this.regtime)).format("YY.MM.DD hh:mm:ss");
-    },
+    // changeDateFormat() {
+    //   return moment(new Date(this.regtime)).format("YY.MM.DD hh:mm:ss");
+    // },
   },
 };
 </script>

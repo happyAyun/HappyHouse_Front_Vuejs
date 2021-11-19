@@ -107,7 +107,7 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.article.writer &&
+      !this.article.userid &&
         ((msg = "작성자 입력해주세요"),
         (err = false),
         this.$refs.userid.focus());
@@ -136,7 +136,7 @@ export default {
     registArticle() {
       writeArticle(
         {
-          writer: this.article.writer,
+          userid: this.article.userid,
           subject: this.article.subject,
           content: this.article.content,
         },
@@ -157,7 +157,7 @@ export default {
       modifyArticle(
         {
           articleno: this.article.articleno,
-          writer: this.article.writer,
+          userid: this.article.userid,
           subject: this.article.subject,
           content: this.article.content,
         },

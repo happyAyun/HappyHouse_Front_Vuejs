@@ -30,7 +30,7 @@
           <b-card
             :header-html="
               `<h3>${article.articleno}.
-          ${article.subject}</h3><div><h6>${article.writer}</div><div>${changeDateFormat}</h6></div>`
+          ${article.subject} [${article.count}]</h3><div><h6>${article.userid}</div><div>${article.regtime}</h6></div>`
             "
             class="mb-2"
             border-variant="dark"
@@ -42,16 +42,15 @@
           </b-card>
         </b-col>
       </b-row>
-      <qna-reply :no="article.articleno" />
     </b-container>
   </div>
 </template>
 
 <script>
-import moment from "moment";
-import http from "@/util/http-common.js";
+import { getArticle, deleteArticle } from "@/api/notice";
 
 export default {
+  components: {},
   data() {
     return {
       article: {},
@@ -63,16 +62,17 @@ export default {
         return this.article.content.split("\n").join("<br>");
       return "";
     },
-    changeDateFormat() {
-      return moment(new Date(this.article.regtime)).format(
-        "YYYY.MM.DD hh:mm:ss"
-      );
-    },
   },
   created() {
-    http.get(`/notice/${this.$route.params.no}`).then(({ data }) => {
-      this.article = data;
-    });
+    getArticle(
+      this.$route.params.no,
+      (response) => {
+        this.article = response.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   },
   methods: {
     listArticle() {
@@ -87,9 +87,8 @@ export default {
     },
     deleteArticle() {
       if (confirm("정말로 삭제?")) {
-        this.$router.replace({
-          name: "NoticeDelete",
-          params: { articleno: this.article.articleno },
+        deleteArticle(this.article.articleno, () => {
+          this.$router.push({ name: "NoticeList" });
         });
       }
     },
