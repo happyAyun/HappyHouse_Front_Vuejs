@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { listArticle } from "@/qna";
+import { listArticle } from "@/api/qna";
 
 export default {
   name: "QnaList",

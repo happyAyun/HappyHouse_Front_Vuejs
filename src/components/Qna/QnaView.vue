@@ -42,7 +42,7 @@
           </b-card>
         </b-col>
       </b-row>
-      <qna-reply :no="article.articleno" />
+      <qna-reply :articleno="article.articleno" />
     </b-container>
   </div>
 </template>
@@ -67,7 +67,7 @@ export default {
   },
   created() {
     getArticle(
-      this.$route.params.no,
+      this.$route.params.articleno,
       (response) => {
         this.article = response.data;
       },

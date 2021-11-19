@@ -15,7 +15,7 @@ import QnaList from "@/components/Qna/QnaList.vue";
 import QnaWrite from "@/components/Qna/QnaWrite.vue";
 import QnaView from "@/components/Qna/QnaView.vue";
 import QnaUpdate from "@/components/Qna/QnaUpdate.vue";
-import QnaDelete from "@/components/Qna/QnaDelete.vue";
+// import QnaDelete from "@/components/Qna/QnaDelete.vue";
 
 Vue.use(VueRouter);
 
@@ -75,7 +75,7 @@ const routes = [
         component: QnaWrite,
       },
       {
-        path: "detail/:no",
+        path: "detail/:articleno",
         name: "QnaView",
         component: QnaView,
       },
@@ -84,11 +84,11 @@ const routes = [
         name: "QnaUpdate",
         component: QnaUpdate,
       },
-      {
-        path: "delete/:no",
-        name: "QnaDelete",
-        component: QnaDelete,
-      },
+      // {
+      //   path: "delete/:no",
+      //   name: "QnaDelete",
+      //   component: QnaDelete,
+      // },
     ],
   },
   {

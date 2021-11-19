@@ -19,18 +19,16 @@
 import { writeReply } from "@/api/qnaReply.js";
 export default {
   name: "QnaReplyWrite",
-  props: { no: Number },
+  props: { articleno: Number },
   data() {
     return { name: null, context: null };
   },
   methods: {
     createComment() {
-      console.log("실행!!");
       writeReply(
         {
-          articleno: this.no,
+          articleno: this.articleno,
           userid: "",
-          subject: "",
           content: this.context,
         },
         ({ data }) => {

@@ -7,7 +7,7 @@
       </div>
       <div class="comment-list-item-context">{{ Obj.content }}</div>
       <div class="comment-list-item-button">
-        <b-button variant="info" @click="modifyReply">수정</b-button>
+        <!-- <b-button variant="info" @click="modifyReply">수정</b-button> -->
         <b-button variant="info" @click="deleteReply">삭제</b-button>
       </div>
     </div>
