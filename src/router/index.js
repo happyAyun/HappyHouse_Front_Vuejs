@@ -68,7 +68,7 @@ const routes = [
         component: QnaWrite,
       },
       {
-        path: "detail/:no",
+        path: "detail/:articleno",
         name: "QnaView",
         component: QnaView,
       },
@@ -77,6 +77,14 @@ const routes = [
         name: "QnaUpdate",
         component: QnaUpdate,
       },
+<<<<<<< HEAD
+=======
+      // {
+      //   path: "delete/:no",
+      //   name: "QnaDelete",
+      //   component: QnaDelete,
+      // },
+>>>>>>> 2b15ea41896e4b507f9f866a9c6041794f41d0a6
     ],
   },
   {

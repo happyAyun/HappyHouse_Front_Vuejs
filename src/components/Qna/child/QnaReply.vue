@@ -1,10 +1,13 @@
 <template>
   <div>
     <b-alert show>답글</b-alert>
+
     <div :key="item.id" v-for="item in replies">
       <QnaReplyItem :Obj="item"></QnaReplyItem>
     </div>
-    <qna-reply-write :no="no" />
+    <div v-if="replies.length == 0">
+      <qna-reply-write :articleno="articleno" />
+    </div>
   </div>
 </template>
 
@@ -16,7 +19,7 @@ import QnaReplyItem from "./QnaReplyItem.vue";
 export default {
   name: "QnaReply",
   props: {
-    no: Number,
+    articleno: Number,
   },
   components: { QnaReplyWrite, QnaReplyItem },
   data() {
@@ -37,7 +40,7 @@ export default {
   },
   created() {
     listReply(
-      this.$route.params.no,
+      this.$route.params.articleno,
       ({ data }) => {
         this.replies = data;
         console.log(this.replies);

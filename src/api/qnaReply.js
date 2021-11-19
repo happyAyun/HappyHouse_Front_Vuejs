@@ -2,9 +2,9 @@ import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
-function listReply(param, success, fail) {
+function listReply(articleno, success, fail) {
   api
-    .get(`/reply`, { params: param })
+    .get(`/reply/${articleno}`)
     .then(success)
     .catch(fail);
 }
@@ -31,6 +31,7 @@ function modifyReply(article, success, fail) {
 }
 
 function deleteReply(articleno, success, fail) {
+  console.log(articleno);
   api
     .delete(`/reply/${articleno}`)
     .then(success)
