@@ -4,7 +4,7 @@
       <b-col style="text-align: left">
         <b-form @submit="onSubmit" @reset="onReset">
           <b-form-group
-            id="writer-group"
+            id="userid-group"
             label="작성자:"
             label-for="userid"
             description="작성자를 입력하세요."

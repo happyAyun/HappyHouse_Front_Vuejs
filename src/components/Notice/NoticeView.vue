@@ -65,7 +65,7 @@ export default {
   },
   created() {
     getArticle(
-      this.$route.params.no,
+      this.$route.params.articleno,
       (response) => {
         this.article = response.data;
       },
