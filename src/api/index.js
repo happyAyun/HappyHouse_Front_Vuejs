@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL, APT_SHOP_URL } from "@/config/index.js";
+import { API_BASE_URL, APT_SHOP_URL } from "@/config";
 
 function apiInstance() {
   const instance = axios.create({

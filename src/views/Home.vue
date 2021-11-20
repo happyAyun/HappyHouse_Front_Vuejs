@@ -5,15 +5,15 @@
         <div class="content-container">
           <div class="col col1">
             <div class="logo">
-              pgfinder
+              HappyHouse
             </div>
             <PritiNavbar />
 
-            <h1>Home away from Home</h1>
+            <h1>HappyHouse</h1>
             <p>
               your student accommodation near top universities across the globe
             </p>
-            <div class="search-bar">
+            <!-- <div class="search-bar">
               <v-text-field
                 solo
                 hide-details="auto"
@@ -23,7 +23,7 @@
               <v-btn dark x-large color="red" @click="redirectSearch"
                 ><v-icon>mdi-magnify</v-icon>search</v-btn
               >
-            </div>
+            </div> -->
           </div>
           <div class="col col2">
             <div class="col2-divs col2-beds ">
@@ -60,59 +60,6 @@
       </div>
     </div>
 
-    <!-- <v-container class="d-flex align-center flex-column feature-container">
-      <h1>Book your perfect accommodation</h1>
-      <p>
-        Take the hassle out of securing your student home for the best years of
-        your life
-      </p>
-      <div class="booking">
-        <div class="column">
-          <div class="image-container">
-            <img
-              class="feature-image"
-              src="https://static-assets-amberstudent.imgix.net/images/home_page_icons/feature_icons/feature-1.svg"
-              alt="column-feature"
-            />
-          </div>
-          <h3>Fast & Easy Bookings</h3>
-          <p>Time is money. Save both when you book with us.</p>
-        </div>
-        <div class="column">
-          <div class="image-container">
-            <img
-              class="feature-image"
-              src="https://static-assets-amberstudent.imgix.net/images/home_page_icons/feature_icons/feature-4.svg"
-              alt="column-feature"
-            />
-          </div>
-          <h3>100% Verified Listings</h3>
-          <p>What you see is what you get. Our promise.</p>
-        </div>
-        <div class="column">
-          <div class="image-container">
-            <img
-              class="feature-image"
-              src="https://static-assets-amberstudent.imgix.net/images/home_page_icons/feature_icons/feature-3.svg"
-              alt="column-feature"
-            />
-          </div>
-          <h3>Price-Match Guarantee</h3>
-          <p>Find a lower price and we'll match it. No questions asked.</p>
-        </div>
-        <div class="column">
-          <div class="image-container">
-            <img
-              class="feature-image"
-              src="https://static-assets-amberstudent.imgix.net/images/home_page_icons/feature_icons/feature-2.svg"
-              alt="column-feature"
-            />
-          </div>
-          <h3>1-on-1 Expert Assistance</h3>
-          <p>Just one call away, we'll be there for you anytime.</p>
-        </div>
-      </div>
-    </v-container> -->
     <div class="add-property" id="features">
       <h1>Agents, Landlords or Property Managers</h1>
       <p>
@@ -121,74 +68,6 @@
       <v-btn color="secondary" large outlined>List propeerty</v-btn>
     </div>
     <Footer />
-    <!-- <div class="footer">
-      <div class="foot-col">
-        <h1>pgfinder</h1>
-        <p class="font-weight-100">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
-          deserunt quae perferendis excepturi nisi ad maxime facilis debitis
-          assumenda. Aut alias neque velit nam totam aperiam soluta magni
-          necessitatibus quas.
-        </p>
-      </div>
-      <div class="foot-col">
-        <h3>Links</h3>
-        <ul class="no-dot l-padding-0 font-weight-200">
-          <li>
-            Home
-          </li>
-          <li>
-            About
-          </li>
-          <li>
-            List property
-          </li>
-          <li>
-            Help
-          </li>
-          <li>
-            Contact
-          </li>
-        </ul>
-      </div>
-      <div class="foot-col social-medialinks">
-        <ul class="no-dot l-padding-0 font-weight-200">
-          <li>
-            <button @click="geocode">
-              Test
-            </button>
-          </li>
-          <li><v-icon color="pink">mdi-instagram</v-icon> Instagram</li>
-          <li><v-icon color="purple">mdi-facebook</v-icon> Facebook</li>
-          <li><v-icon color="blue">mdi-linkedin</v-icon> LinkedIN</li>
-          <li><v-icon color="light-blue">mdi-twitter</v-icon> Twitter</li>
-          <li><v-icon color="red">mdi-youtube</v-icon> Youtube</li>
-          <li>
-            Terms
-          </li>
-          <li>
-            Privacy
-          </li>
-          <li>
-            Sitemap
-          </li>
-        </ul>
-      </div>
-      <div class="foot-col contact-form">
-        <h3>Contact</h3>
-        <p class="text-color-grey">Call or WhatsApp us at:</p>
-        <a class="a-button" href="#">0110</a>
-        <br />
-        <a class="a-button" href="#">1254</a>
-        <br />
-        <a class="a-button" href="#">abhishek@gmail.com</a>
-        <br />
-        <p class="font-weight-100">
-          Our phone lines are active between 9AM - 9PM IST. For any queries you
-          can expect a response within 24 hours from our team.
-        </p>
-      </div>
-    </div> -->
   </div>
 </template>
 
