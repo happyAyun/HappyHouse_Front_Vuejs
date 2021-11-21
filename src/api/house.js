@@ -38,4 +38,10 @@ function shopList(params, success, fail) {
     .catch(fail);
 }
 
-export { sidoList, gugunList, shopList, dongList, houseList };
+function pastList(params, success, fail) {
+  api
+    .get(`/map/past`, { params: params })
+    .then(success)
+    .catch(fail);
+}
+export { sidoList, gugunList, shopList, dongList, houseList, pastList };

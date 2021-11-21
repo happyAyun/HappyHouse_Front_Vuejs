@@ -1,82 +1,82 @@
 <template>
-    <div class="footer">
-      <div class="foot-col">
-        <h1>pgfinder</h1>
-        <p class="font-weight-100">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
-          deserunt quae perferendis excepturi nisi ad maxime facilis debitis
-          assumenda. Aut alias neque velit nam totam aperiam soluta magni
-          necessitatibus quas.
-        </p>
-      </div>
-      <div class="foot-col">
-        <h3>Links</h3>
-        <ul class="no-dot l-padding-0 font-weight-200">
-          <li>
-            Home
-          </li>
-          <li>
-            About
-          </li>
-          <li>
-            List property
-          </li>
-          <li>
-            Help
-          </li>
-          <li>
-            Contact
-          </li>
-        </ul>
-      </div>
-      <div class="foot-col social-medialinks">
-        <ul class="no-dot l-padding-0 font-weight-200">
-          <li>
-            <button @click="geocode">
-              Test
-            </button>
-          </li>
-          <li><v-icon color="pink">mdi-instagram</v-icon> Instagram</li>
-          <li><v-icon color="purple">mdi-facebook</v-icon> Facebook</li>
-          <li><v-icon color="blue">mdi-linkedin</v-icon> LinkedIN</li>
-          <li><v-icon color="light-blue">mdi-twitter</v-icon> Twitter</li>
-          <li><v-icon color="red">mdi-youtube</v-icon> Youtube</li>
-          <li>
-            Terms
-          </li>
-          <li>
-            Privacy
-          </li>
-          <li>
-            Sitemap
-          </li>
-        </ul>
-      </div>
-      <div class="foot-col contact-form">
-        <h3>Contact</h3>
-        <p class="text-color-grey">Call or WhatsApp us at:</p>
-        <a class="a-button" href="#">0110</a>
-        <br />
-        <a class="a-button" href="#">1254</a>
-        <br />
-        <a class="a-button" href="#">abhishek@gmail.com</a>
-        <br />
-        <p class="font-weight-100">
-          Our phone lines are active between 9AM - 9PM IST. For any queries you
-          can expect a response within 24 hours from our team.
-        </p>
-      </div>
+  <div class="footer">
+    <div class="foot-col">
+      <h1>pgfinder</h1>
+      <p class="font-weight-100">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
+        deserunt quae perferendis excepturi nisi ad maxime facilis debitis
+        assumenda. Aut alias neque velit nam totam aperiam soluta magni
+        necessitatibus quas.
+      </p>
     </div>
+    <div class="foot-col">
+      <h3>Links</h3>
+      <ul class="no-dot l-padding-0 font-weight-200">
+        <li>
+          Home
+        </li>
+        <li>
+          About
+        </li>
+        <li>
+          List property
+        </li>
+        <li>
+          Help
+        </li>
+        <li>
+          Contact
+        </li>
+      </ul>
+    </div>
+    <div class="foot-col social-medialinks">
+      <ul class="no-dot l-padding-0 font-weight-200">
+        <li>
+          <button @click="geocode">
+            Test
+          </button>
+        </li>
+        <li><v-icon color="pink">mdi-instagram</v-icon> Instagram</li>
+        <li><v-icon color="purple">mdi-facebook</v-icon> Facebook</li>
+        <li><v-icon color="blue">mdi-linkedin</v-icon> LinkedIN</li>
+        <li><v-icon color="light-blue">mdi-twitter</v-icon> Twitter</li>
+        <li><v-icon color="red">mdi-youtube</v-icon> Youtube</li>
+        <li>
+          Terms
+        </li>
+        <li>
+          Privacy
+        </li>
+        <li>
+          Sitemap
+        </li>
+      </ul>
+    </div>
+    <div class="foot-col contact-form">
+      <h3>Contact</h3>
+      <p class="text-color-grey">Call or WhatsApp us at:</p>
+      <a class="a-button" href="#">0110</a>
+      <br />
+      <a class="a-button" href="#">1254</a>
+      <br />
+      <a class="a-button" href="#">abhishek@gmail.com</a>
+      <br />
+      <p class="font-weight-100">
+        Our phone lines are active between 9AM - 9PM IST. For any queries you
+        can expect a response within 24 hours from our team.
+      </p>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    methods:{
-      geocode(){
-        console.log("keelu ");
-      }
-    }
-}
+  methods: {
+    geocode() {
+      console.log("keelu ");
+    },
+  },
+};
 </script>
 
 <style>

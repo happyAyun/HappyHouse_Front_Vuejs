@@ -1,4 +1,10 @@
-import { sidoList, gugunList, dongList, houseList } from "@/api/house.js";
+import {
+  sidoList,
+  gugunList,
+  dongList,
+  houseList,
+  pastList,
+} from "@/api/house.js";
 
 const houseStore = {
   namespaced: true,
@@ -8,6 +14,7 @@ const houseStore = {
     dongs: [{ value: null, text: "선택하세요" }],
     houses: [],
     house: null,
+    pastList: [],
   },
 
   getters: {},
@@ -31,6 +38,10 @@ const houseStore = {
     SET_HOUSE_LIST: (state, houses) => {
       state.houses = houses;
     },
+    SET_PAST_LIST: (state, pastList) => {
+      state.pastList = pastList;
+    },
+
     CLEAR_SIDO_LIST: (state) => {
       state.sidos = [{ value: null, text: "선택하세요" }];
     },
@@ -91,8 +102,22 @@ const houseStore = {
       houseList(
         params,
         ({ data }) => {
-          console.log(data);
+          // console.log(data);
           commit("SET_HOUSE_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getPastList: ({ commit }, aptCode) => {
+      const params = {
+        aptCode: aptCode,
+      };
+      pastList(
+        params,
+        ({ data }) => {
+          commit("SET_PAST_LIST", data);
         },
         (error) => {
           console.log(error);

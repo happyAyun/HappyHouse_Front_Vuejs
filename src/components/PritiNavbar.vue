@@ -3,14 +3,12 @@
     <vs-card>
       <template #text>
         <div style="display:flex; margin:-15px;">
-          <vs-button shadow color="#000" href="/" >Home</vs-button>
-          <vs-button shadow color="black" href="#features" >Features</vs-button>
+          <vs-button shadow color="#000" href="/">Home</vs-button>
+          <vs-button shadow color="black" href="#features">Features</vs-button>
           <!-- <vs-button shadow color="black">How it works</vs-button> -->
-          <vs-button shadow color="black" @click="toPage ">Help</vs-button>
-
+          <vs-button shadow color="black" @click="toPage">Help</vs-button>
 
           <!-- <vs-button shadow color="black"> -->
-            
 
           <v-dialog v-model="dialog" width="800" class="login-dialog">
             <template v-slot:activator="{ on, attrs }">
@@ -39,7 +37,13 @@
                     <span class="color-fff">Continue ></span>
                   </v-btn>
                   <center><p>OR</p></center>
-                  <v-btn href="https://www.facebook.com/" block large color="#3f5b96" class="login-btn">
+                  <v-btn
+                    href="https://www.facebook.com/"
+                    block
+                    large
+                    color="#3f5b96"
+                    class="login-btn"
+                  >
                     <v-icon color="white">mdi-facebook</v-icon>
                     <span class="color-fff">Continue with Facebook</span>
                   </v-btn>
@@ -55,7 +59,7 @@
               </div>
             </div>
           </v-dialog>
-           
+
           <!-- </vs-button>           -->
         </div>
       </template>
@@ -68,16 +72,14 @@ export default {
   data() {
     return {
       dialog: false,
-      
-    }
-    
+    };
   },
   methods: {
-    toPage: function(){
-    this.$router.push({ name: 'help' });
-    }
-  }
-}
+    toPage: function() {
+      this.$router.push({ name: "help" });
+    },
+  },
+};
 </script>
 
 <style scoped>
