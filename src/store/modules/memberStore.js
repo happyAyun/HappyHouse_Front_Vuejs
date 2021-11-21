@@ -1,6 +1,12 @@
 import jwt_decode from "jwt-decode";
 import { login } from "@/api/member.js";
-import { findById, updateUser, deleteUser } from "../../api/member";
+import {
+  findById,
+  updateUser,
+  deleteUser,
+  joinUser,
+  idCheck,
+} from "../../api/member";
 
 const memberStore = {
   namespaced: true,
@@ -8,6 +14,8 @@ const memberStore = {
     isLogin: false,
     isLoginError: false,
     userInfo: null,
+    isUserId: "아이디는 6자리이상 10자리이하 입니다.",
+    isOK: false,
   },
   getters: {
     checkUserInfo: function(state) {
@@ -28,6 +36,12 @@ const memberStore = {
     SET_USER_ERASE: (state, userInfo) => {
       state.userInfo = userInfo;
       state.isLogin = false;
+    },
+    SET_USER_JOIN: (state, isUserId) => {
+      state.isUserId = isUserId;
+    },
+    SET_ISOK: (state, isok) => {
+      state.isOK = isok;
     },
   },
   actions: {
@@ -92,7 +106,7 @@ const memberStore = {
           let msg = "탈퇴처리시 문제 발생";
           if (response.data === "success") {
             commit("SET_USER_ERASE", null);
-            msg = "퇄퇴가 완료되었습니다.";
+            msg = "탈퇴가 완료되었습니다.";
           }
           alert(msg);
         },
@@ -100,6 +114,46 @@ const memberStore = {
           console.log(error);
         }
       );
+    },
+    joinUser({ commit }, user) {
+      console.log(user);
+      joinUser(
+        user,
+        (response) => {
+          console.log(response);
+          let msg = "회원가입 중 문제 발생";
+          if (response.data === "success") {
+            commit("SET_USER_JOIN", "");
+            msg = "회원가입 성공";
+          }
+          alert(msg);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    idChecking({ commit }, userid) {
+      console.log(userid);
+      if (userid == "" || userid.length < 6 || userid.length > 10) {
+        commit("SET_USER_JOIN", "아이디는 6자리이상 10자리이하 입니다.");
+      } else {
+        idCheck(
+          userid,
+          (response) => {
+            console.log(response);
+            if (response.data === "success") {
+              commit("SET_USER_JOIN", "사용가능한 아이디입니다.");
+              commit("SET_ISOK", true);
+            } else {
+              commit("SET_USER_JOIN", "이미 해당 아이디가 존재합니다.");
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
     },
   },
 };

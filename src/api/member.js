@@ -31,6 +31,21 @@ function deleteUser(userid, success, fail) {
     .then(success)
     .catch(fail);
 }
+
+function joinUser(user, success, fail) {
+  api
+    .post(`/user`, JSON.stringify(user))
+    .then(success)
+    .catch(fail);
+}
+
+function idCheck(userid, success, fail) {
+  api
+    .get(`/user/${userid}`)
+    .then(success)
+    .catch(fail);
+}
+
 // function logout(success, fail)
 
-export { login, findById, updateUser, deleteUser };
+export { login, findById, updateUser, deleteUser, joinUser, idCheck };
