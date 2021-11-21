@@ -17,6 +17,20 @@ async function findById(userid, success, fail) {
     .catch(fail);
 }
 
+function updateUser(user, success, fail) {
+  console.log(user);
+  api
+    .put(`/user`, JSON.stringify(user))
+    .then(success)
+    .catch(fail);
+}
+
+function deleteUser(userid, success, fail) {
+  api
+    .delete(`/user/${userid}`)
+    .then(success)
+    .catch(fail);
+}
 // function logout(success, fail)
 
-export { login, findById };
+export { login, findById, updateUser, deleteUser };

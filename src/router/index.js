@@ -6,10 +6,10 @@ import Notice from "../views/Notice/Notice.vue";
 import Qna from "../views/Qna/Qna.vue";
 import Map from "../views/Map/Map.vue";
 import Member from "../views/user/Member.vue";
+import MyPage from "../views/user/MyPage.vue";
 
 import MemberLogin from "@/components/user/MemberLogin.vue";
 import MemberJoin from "@/components/user/MemberJoin.vue";
-import MemberMyPage from "@/components/user/MemberMyPage.vue";
 
 import NoticeList from "@/components/Notice/NoticeList.vue";
 import NoticeWrite from "@/components/Notice/NoticeWrite.vue";
@@ -21,6 +21,8 @@ import QnaWrite from "@/components/Qna/QnaWrite.vue";
 import QnaView from "@/components/Qna/QnaView.vue";
 import QnaUpdate from "@/components/Qna/QnaUpdate.vue";
 
+import MyPageMain from "@/components/user/MyPageMain.vue";
+import MyPageInfoUpdate from "@/components/user/MyPageInfoUpdate.vue";
 import store from "@/store/index.js";
 
 Vue.use(VueRouter);
@@ -65,11 +67,26 @@ const routes = [
         name: "SignUp",
         component: MemberJoin,
       },
+    ],
+  },
+  {
+    path: "/mypage",
+    name: "MyPage",
+    beforeEnter: onlyAuthUser,
+    component: MyPage,
+    redirect: "/mypage/main",
+    children: [
       {
-        path: "mypage",
-        name: "MyPage",
+        path: "main",
+        name: "MyPageMain",
         beforeEnter: onlyAuthUser,
-        component: MemberMyPage,
+        component: MyPageMain,
+      },
+      {
+        path: "update",
+        name: "MyPageInfoUpdate",
+        beforeEnter: onlyAuthUser,
+        component: MyPageInfoUpdate,
       },
     ],
   },

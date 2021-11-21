@@ -1,6 +1,6 @@
 import jwt_decode from "jwt-decode";
 import { login } from "@/api/member.js";
-import { findById } from "../../api/member";
+import { findById, updateUser, deleteUser } from "../../api/member";
 
 const memberStore = {
   namespaced: true,
@@ -10,7 +10,7 @@ const memberStore = {
     userInfo: null,
   },
   getters: {
-    checkUserInfo: function (state) {
+    checkUserInfo: function(state) {
       return state.userInfo;
     },
   },
@@ -24,6 +24,10 @@ const memberStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.isLogin = true;
       state.userInfo = userInfo;
+    },
+    SET_USER_ERASE: (state, userInfo) => {
+      state.userInfo = userInfo;
+      state.isLogin = false;
     },
   },
   actions: {
@@ -54,6 +58,43 @@ const memberStore = {
           } else {
             console.log("유저 정보 없음!!");
           }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async modifyUser({ commit }, user) {
+      console.log(user);
+      await updateUser(
+        user,
+        (response) => {
+          console.log(response);
+          let msg = "수정처리시 문제 발생";
+          if (response.data === "success") {
+            commit("SET_USER_INFO", response.data.userInfo);
+            msg = "수정이 완료되었습니다.";
+          }
+          alert(msg);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    deleteUser({ commit }, userid) {
+      console.log(userid);
+      sessionStorage.removeItem("access-token");
+      deleteUser(
+        userid,
+        (response) => {
+          console.log(response);
+          let msg = "탈퇴처리시 문제 발생";
+          if (response.data === "success") {
+            commit("SET_USER_ERASE", null);
+            msg = "퇄퇴가 완료되었습니다.";
+          }
+          alert(msg);
         },
         (error) => {
           console.log(error);
