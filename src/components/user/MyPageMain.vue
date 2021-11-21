@@ -38,6 +38,7 @@
       >정보수정</b-button
     >
     <b-button variant="danger" @click="joinOut">회원탈퇴</b-button>
+    <b-button variant="danger" @click="logoutUser">로그아웃</b-button>
   </b-jumbotron>
 </template>
 
@@ -53,7 +54,7 @@ export default {
     ...mapState(memberStore, ["userInfo"]),
   },
   methods: {
-    ...mapActions(memberStore, ["deleteUser"]),
+    ...mapActions(memberStore, ["deleteUser", "logout"]),
 
     moveUpdatePage() {
       this.$router.replace({
@@ -66,6 +67,10 @@ export default {
         await this.deleteUser(this.userInfo.userid);
         this.$router.push({ name: "Home" });
       }
+    },
+    async logoutUser() {
+      await this.logout();
+      this.$router.push({ name: "Home" });
     },
   },
 };

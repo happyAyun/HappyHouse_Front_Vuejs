@@ -43,6 +43,10 @@ const memberStore = {
     SET_ISOK: (state, isok) => {
       state.isOK = isok;
     },
+    SET_USER_LOGOUT: (state, userInfo) => {
+      state.isLogin = false;
+      state.userInfo = userInfo;
+    },
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -123,7 +127,8 @@ const memberStore = {
           console.log(response);
           let msg = "회원가입 중 문제 발생";
           if (response.data === "success") {
-            commit("SET_USER_JOIN", "");
+            commit("SET_USER_JOIN", "아이디는 6자리이상 10자리이하 입니다.");
+            commit("SET_ISOK", false);
             msg = "회원가입 성공";
           }
           alert(msg);
@@ -154,6 +159,12 @@ const memberStore = {
           }
         );
       }
+    },
+    logout({ commit }) {
+      console.log("로그아웃");
+      sessionStorage.removeItem("access-token");
+      commit("SET_USER_LOGOUT", null);
+      alert("로그아웃 되었습니다.");
     },
   },
 };
