@@ -90,7 +90,7 @@ const memberStore = {
           console.log(response);
           let msg = "수정처리시 문제 발생";
           if (response.data === "success") {
-            commit("SET_USER_INFO", response.data.userInfo);
+            commit("SET_USER_INFO", user);
             msg = "수정이 완료되었습니다.";
           }
           alert(msg);

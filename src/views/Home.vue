@@ -25,7 +25,7 @@
               >
             </div> -->
           </div>
-          <div class="col col2">
+          <!-- <div class="col col2">
             <div class="col2-divs col2-beds ">
               <v-icon x-large color="red">mdi-bed-queen</v-icon>
               <h5>1M+ Beds</h5>
@@ -55,7 +55,7 @@
                 • Based 800+ Reviews by students
               </p>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -113,13 +113,12 @@ export default {
   top: 30px;
 }
 
-.home-card-container {
-  background-color: white;
-
+/* .home-card-container {
   padding: 0px 40px;
   height: 100%;
   width: 100%;
-}
+  background-image: url("../assets/home.jpg");
+} */
 
 .home-card {
   height: 96vh;
@@ -130,6 +129,8 @@ export default {
   display: grid;
   height: 100%;
   grid-template-rows: 80% 20%;
+  background-image: url("../assets/home.jpg");
+  background-size: 100% 100%;
 }
 
 .col1 {
@@ -137,7 +138,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: url("../assets/home.jpg");
   width: 100%;
   background-size: cover;
   color: white;
