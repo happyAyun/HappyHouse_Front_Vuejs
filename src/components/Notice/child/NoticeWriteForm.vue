@@ -4,23 +4,6 @@
       <b-col style="text-align: left">
         <b-form @submit="onSubmit" @reset="onReset">
           <b-form-group
-            id="userid-group"
-            label="작성자:"
-            label-for="userid"
-            description="작성자를 입력하세요."
-          >
-            <b-form-input
-              id="userid"
-              :disabled="isUserid"
-              v-model="article.userid"
-              type="text"
-              required
-              placeholder="작성자 입력..."
-              ref="userid"
-            ></b-form-input>
-          </b-form-group>
-
-          <b-form-group
             id="subject-group"
             label="제목:"
             label-for="subject"
@@ -66,6 +49,9 @@
 
 <script>
 import { writeArticle, getArticle, modifyArticle } from "@/api/notice";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "NoticeWriteForm",
@@ -83,7 +69,12 @@ export default {
   props: {
     type: { type: String },
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   created() {
+    this.article.userid = this.userInfo.userid;
+
     if (this.type === "modify") {
       getArticle(
         this.$route.params.articleno,
@@ -107,12 +98,7 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.article.userid &&
-        ((msg = "작성자 입력해주세요"),
-        (err = false),
-        this.$refs.userid.focus());
-      err &&
-        !this.article.subject &&
+      !this.article.subject &&
         ((msg = "제목 입력해주세요"),
         (err = false),
         this.$refs.subject.focus());

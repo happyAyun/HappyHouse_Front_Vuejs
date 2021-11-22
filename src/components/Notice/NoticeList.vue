@@ -3,12 +3,12 @@
     <b-container class="bv-example-row mt-3">
       <b-row>
         <b-col>
-          <b-alert show><h3>글목록</h3></b-alert>
+          <b-alert show variant="success"><h1>공지사항</h1></b-alert>
         </b-col>
       </b-row>
       <b-row class="mb-1">
         <b-col class="text-right">
-          <b-button variant="outline-primary" @click="moveWrite()"
+          <b-button pill variant="outline-danger" @click="moveWrite()"
             >글쓰기</b-button
           >
         </b-col>

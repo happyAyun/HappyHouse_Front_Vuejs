@@ -1,49 +1,48 @@
 <template>
   <div>
     <b-container class="bv-example-row mt-3">
-      <b-row>
-        <b-col>
-          <b-alert show><h3>글보기</h3></b-alert>
-        </b-col>
-      </b-row>
-      <b-row class="mb-1">
-        <b-col class="text-left">
-          <b-button variant="outline-primary" @click="listArticle"
-            >목록</b-button
-          >
-        </b-col>
-        <b-col class="text-right">
-          <b-button
-            variant="outline-info"
-            size="sm"
-            @click="moveModifyArticle"
-            class="mr-2"
-            >글수정</b-button
-          >
-          <b-button variant="outline-danger" size="sm" @click="deleteArticle"
-            >글삭제</b-button
-          >
-        </b-col>
-      </b-row>
+      <h1 style="margin-bottom:50px">Q&A</h1>
+      <b-row class="mb-1"> </b-row>
       <b-row class="mb-1">
         <b-col>
           <b-card
+            bg-variant="dark"
+            text-variant="white"
             :header-html="
-              `<h3>${article.articleno}.
-          ${article.subject} [${article.hit}]</h3><div><h6>${article.userid}</div><div>${article.regtime}</h6></div>`
+              `<h1>${article.articleno}.
+          ${article.subject}</h1>`
             "
-            class="mb-2"
-            border-variant="dark"
-            no-body
           >
-            <b-card-body class="text-left">
-              <div v-html="message"></div>
-            </b-card-body>
           </b-card>
+          <b-card-body class="text-left">
+            <div>
+              <h5 style="display:inline-block">
+                작성자 : {{ article.userid }}
+              </h5>
+
+              <h5 style="display:inline-block; float: right;">
+                작성 일자 : {{ article.regtime }}
+              </h5>
+            </div>
+          </b-card-body>
+          <div>
+            <b-jumbotron v-html="message"> </b-jumbotron>
+          </div>
         </b-col>
       </b-row>
-      <qna-reply :articleno="article.articleno" />
+      <div style="margin-bottom:50px">
+        <qna-reply :articleno="article.articleno" />
+      </div>
     </b-container>
+    <b-col class="text-left">
+      <b-button variant="warning" @click="listArticle">목록</b-button>
+    </b-col>
+    <b-col class="text-right">
+      <b-button pill variant="info" @click="moveModifyArticle">수정</b-button>
+      <b-button pill variant="outline-danger" @click="deleteArticle"
+        >삭제</b-button
+      >
+    </b-col>
   </div>
 </template>
 

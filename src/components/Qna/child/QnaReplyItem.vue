@@ -1,15 +1,30 @@
 <template>
   <div>
-    <div class="comment-list-item">
-      <div class="comment-list-item-name">
-        <!-- <div>{{ obj.userid }}</div> -->
-        <div>{{ changeDateFormat }}</div>
-      </div>
-      <div class="comment-list-item-context">{{ Obj.content }}</div>
-      <div class="comment-list-item-button">
-        <!-- <b-button variant="info" @click="modifyReply">수정</b-button> -->
-        <b-button variant="info" @click="deleteReply">삭제</b-button>
-      </div>
+    <div class="reply">
+      <table class="tb">
+        <tr>
+          <td class="tbd">작성일자</td>
+          <td class="tbd">작성자</td>
+          <td rowspan="2" class="tbreply">
+            <h3>{{ Obj.content }}</h3>
+          </td>
+          <td rowspan="2" class="tbd">
+            <h3>
+              <b-button
+                style="float: right;"
+                size="sm"
+                variant="primary"
+                @click="deleteReply"
+                >삭제</b-button
+              >
+            </h3>
+          </td>
+        </tr>
+        <tr>
+          <td>{{ changeDateFormat }}</td>
+          <td>ㅇㄹㅇㄹㅇㄷ</td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
@@ -49,6 +64,16 @@ export default {
 </script>
 
 <style scoped>
+.tb {
+  text-align: center;
+}
+.tbd {
+  width: 150px;
+}
+.tbreply {
+  width: 700px;
+  border: 1px solid grey;
+}
 .comment-list-item {
   display: flex;
   justify-content: space-between;
@@ -90,5 +115,9 @@ export default {
   justify-content: space-between;
   padding-bottom: 1em;
   margin-left: 10em;
+}
+.reply {
+  padding-bottom: 50px;
+  border-bottom: 2px solid gray;
 }
 </style>
