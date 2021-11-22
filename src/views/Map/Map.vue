@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div id="all">
+    <div class="logo">
+      HappyHouse
+    </div>
+    <PritiNavbar />
+    <div id="all" class="top">
       <b-row class="mt-4 mb-4 text-center">
         <!-- <b-col class="sm-3">
       <b-form-input
@@ -75,10 +79,14 @@
 </template>
 
 <script>
+import PritiNavbar from "@/components/PritiNavbar.vue";
 import { mapState, mapActions, mapMutations } from "vuex";
 const houseStore = "houseStore";
 export default {
   name: "Map",
+  components: {
+    PritiNavbar,
+  },
   data() {
     return {
       map: null,
@@ -1041,6 +1049,20 @@ document.addEventListener("DOMContentLoaded", function() {});
   width: 25%;
   height: 25%;
 }
+.logo {
+  text-shadow: #000000;
+  font-size: 48px;
+  font-weight: bold;
+  transform: translateY(-50%);
+  padding: 20px 20px;
+  height: max-content;
+  position: absolute;
+  left: 40px;
+  top: 30px;
+}
+/* .top {
+  margin-top: 0px;
+} */
 /* <div id="detail-img-section"></div>
           <div id="detail-apt-section"></div>
           <div id="detail-transport-section"></div>
