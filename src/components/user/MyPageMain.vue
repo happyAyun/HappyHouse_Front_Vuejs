@@ -28,10 +28,10 @@
     </b-container>
     <hr class="my-4" />
 
-    <b-button variant="primary" class="mr-1" @click="moveUpdatePage"
+    <b-button pill variant="outline-danger" @click="moveUpdatePage"
       >정보수정</b-button
     >
-    <b-button variant="danger" @click="joinOut">회원탈퇴</b-button>
+    <b-button pill variant="info" @click="joinOut">회원탈퇴</b-button>
   </b-jumbotron>
 </template>
 

@@ -156,7 +156,7 @@ export default {
         this.userpwd = "";
         alert("로그인 성공!");
         location.reload();
-        // this.$router.push({ name: "Home" });
+        //this.$router.push({ name: "Home" });
       } else {
         alert("로그인 실패");
       }

@@ -1,47 +1,50 @@
 <template>
   <b-jumbotron>
-    <b-container class="mt-4">
-      <b-row>
-        <b-col cols="2"></b-col>
-        <b-col cols="2" align-self="end">아이디</b-col
-        ><b-col cols="4" align-self="start">{{ userInfo.userid }}</b-col>
-        <b-col cols="2"></b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2"></b-col>
-        <b-col cols="2" align-self="end">이름</b-col
-        ><b-form-input
-          class="my-2 inputform"
-          v-model="user.username"
-          placeholder="수정할 이름"
-          ref="username"
-        ></b-form-input>
-        <b-col cols="2"></b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2"></b-col>
-        <b-col cols="2" align-self="end">이메일</b-col
-        ><b-form-input
-          class="my-2 inputform"
-          v-model="user.email"
-          placeholder="수정할 이메일"
-          ref="email"
-        ></b-form-input>
-        <b-col cols="2"></b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2"></b-col>
-        <b-col cols="2" align-self="end">가입일</b-col
-        ><b-col cols="4" align-self="start">{{ userInfo.joindate }}</b-col>
-        <b-col cols="2"></b-col>
-      </b-row>
-    </b-container>
-    <hr class="my-4" />
-
-    <b-button variant="primary" class="mr-1" @click="updateUser"
-      >정보수정</b-button
-    >
-    <b-button type="reset" variant="danger" @click="moveMypage">취소</b-button>
+    <b-col>
+      <b-container class="mt-4">
+        <b-row>
+          <b-col cols="2"></b-col>
+          <b-col cols="2" align-self="end">아이디</b-col
+          ><b-col cols="4" align-self="start">{{ userInfo.userid }}</b-col>
+          <b-col cols="2"></b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="2"></b-col>
+          <b-col cols="2" align-self="end">이름</b-col
+          ><b-form-input
+            style="width:300px"
+            class="my-2 "
+            v-model="user.username"
+            placeholder="수정할 이름"
+            ref="username"
+          ></b-form-input>
+          <b-col cols="2"></b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="2"></b-col>
+          <b-col cols="2" align-self="end">이메일</b-col
+          ><b-form-input
+            style="width:300px"
+            class="my-2 "
+            v-model="user.email"
+            placeholder="수정할 이메일"
+            ref="email"
+          ></b-form-input>
+          <b-col cols="2"></b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="2"></b-col>
+          <b-col cols="2" align-self="end">가입일</b-col
+          ><b-col cols="4" align-self="start">{{ userInfo.joindate }}</b-col>
+          <b-col cols="2"></b-col>
+        </b-row>
+      </b-container>
+      <hr class="my-4" />
+      <b-button pill variant="primary" @click="updateUser">수정</b-button>
+      <b-button pill variant="outline-danger" @click="moveMypage"
+        >취소</b-button
+      >
+    </b-col>
   </b-jumbotron>
 </template>
 
