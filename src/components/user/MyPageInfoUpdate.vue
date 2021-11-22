@@ -1,9 +1,5 @@
 <template>
   <b-jumbotron>
-    <template #header>My Page</template>
-
-    <template #lead> 내 정보 확인페이지입니다. </template>
-
     <b-container class="mt-4">
       <b-row>
         <b-col cols="2"></b-col>
@@ -15,7 +11,7 @@
         <b-col cols="2"></b-col>
         <b-col cols="2" align-self="end">이름</b-col
         ><b-form-input
-          class="my-2"
+          class="my-2 inputform"
           v-model="user.username"
           placeholder="수정할 이름"
           ref="username"
@@ -26,6 +22,7 @@
         <b-col cols="2"></b-col>
         <b-col cols="2" align-self="end">이메일</b-col
         ><b-form-input
+          class="my-2 inputform"
           v-model="user.email"
           placeholder="수정할 이메일"
           ref="email"
@@ -56,12 +53,6 @@ const memberStore = "memberStore";
 export default {
   data() {
     return {
-      // origin: {
-      //   userid: "",
-      //   username: this.userInfo.username,
-      //   email: this.userInfo.email,
-      //   joindate: "",
-      // },
       user: {
         userid: "",
         username: "",
@@ -119,4 +110,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.inputform {
+  width: 300px;
+}
+</style>

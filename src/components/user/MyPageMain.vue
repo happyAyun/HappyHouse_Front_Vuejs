@@ -1,11 +1,5 @@
 <template>
   <b-jumbotron>
-    <template #header>My Page</template>
-
-    <template #lead> 내 정보 확인페이지입니다. </template>
-
-    <hr class="my-4" />
-
     <b-container class="mt-4">
       <b-row>
         <b-col cols="2"></b-col>
@@ -38,7 +32,6 @@
       >정보수정</b-button
     >
     <b-button variant="danger" @click="joinOut">회원탈퇴</b-button>
-    <b-button variant="danger" @click="logoutUser">로그아웃</b-button>
   </b-jumbotron>
 </template>
 
