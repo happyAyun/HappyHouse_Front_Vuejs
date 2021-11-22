@@ -37,6 +37,7 @@ export default {
             msg = "답변이 등록되었습니다.";
           }
           alert(msg);
+          location.reload();
         },
         (error) => {
           console.log(error);
