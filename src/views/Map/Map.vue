@@ -35,7 +35,7 @@
         </b-col>
       </b-row>
 
-      <div class="btn-group">
+      <!-- <div class="btn-group">
         <button type="button" class="btn btn-primary" id="inspectorSearch">
           선별 진료소
         </button>
@@ -45,11 +45,11 @@
         <button type="button" class="btn btn-primary" id="shopSearch">
           카페
         </button>
-      </div>
+      </div> -->
       <div class="map_wrap">
         <div
           id="map"
-          style="width:98%;height:700px; position: relative; overflow:hidden; margin-left:15px;"
+          style="width:98%;height:900px; position: relative; overflow:hidden; margin-left:15px;"
         ></div>
         <div id="menu_wrap" class="bg_white">
           <ul id="placesList"></ul>
@@ -61,7 +61,13 @@
           <div id="detail_title">
             <div class="close" @click="this.closeDetail" title="닫기"></div>
           </div>
-          <ul id="detail-content"></ul>
+          <div id="detail-img-section"></div>
+          <div id="detail-apt-section"></div>
+          <div id="detail-transport-section">
+            <h4>{{ transScore }} 점!</h4>
+          </div>
+          <!-- <div id="detail-img-section"></div>
+          <div id="detail-img-section"></div> -->
         </div>
       </div>
     </div>
@@ -94,7 +100,7 @@ export default {
       cx: null,
       overlay: null,
       overlays: [],
-
+      transScore: 0,
       sidoCode: null,
       gugunCode: null,
       dongCode: null,
@@ -133,7 +139,13 @@ export default {
       this.makePastAptList();
     },
     subways: function() {
-      this.displayBlock();
+      this.displaySubway();
+    },
+    buses: function() {
+      this.displayBus();
+    },
+    bikes: function() {
+      this.displayBike();
     },
   },
   methods: {
@@ -419,7 +431,7 @@ export default {
         // let makeDetailDiv = self.makeDetailDiv(place);
         infowindow.close();
         let position = new kakao.maps.LatLng(place.lat, place.lng);
-
+        self.map.panTo(position);
         let content = document.createElement("div");
         content.classList.add("overlay_info");
 
@@ -466,21 +478,23 @@ export default {
         overlay.setContent(content);
         overlay.setMap(map);
         self.getPastAptList(place.aptCode);
+        // this.panTo(place.lat, place.lng);
       });
     },
-    async makeDetailDiv(place) {
-      console.log("makeDetailDiv 들어옴!!");
-      // let el = document.getElementById("detail");
-
+    makeDetailDiv(place) {
+      let el = document.getElementById("detail");
+      let imgEl = document.getElementById("detail-img-section");
       let contentEl = document.createElement("li");
+      contentEl.classList.add("detail-content-li");
       contentEl.append(place.aptName);
-      contentEl.append(this.priceToString(place.recentPrice));
-      console.log(place);
+      contentEl.appendChild(document.createElement("br"));
+      contentEl.append(place.dongName + " " + place.jibun);
+      contentEl.appendChild(document.createElement("br"));
+      contentEl.append(place.buildYear + "년 건축");
 
-      // contentEl.append(place.);
-      // contentEl.append(place.aptName);
-      // contentEl.append(place.aptName);
       let img = document.createElement("img");
+      img.src = require("@/assets/img/waiting.jpg");
+      imgEl.appendChild(img);
       let latlng = {
         lat: place.lat,
         lng: place.lng,
@@ -488,71 +502,36 @@ export default {
 
       // img.src = place.img;
       // if (!place.img || place.img == "")
-      img.src = require("@/assets/img/waiting.jpg");
 
-      console.log(place.lat + " " + place.lng);
       // let transportScore =
-      contentEl.appendChild(img);
-
-      console.log("getSubwayList 호출 직전" + this.subways);
 
       this.getSubwayList(latlng);
-      // this.getBusList(latlng);
-      // this.getBikeList(latlng);
-      // console.log("getSubwayList 호출 직후" + this.subways);
-      // let trans = document.createElement("h5");
-      // trans.append("근처 지하철 : " + this.subways.length + "개");
-      // trans.appendChild(document.createElement("br"));
-      // for (let subway of this.subways) {
-      //   trans.append("(" + subway.train + ")" + subway.station + "역 ");
-      //   trans.appendChild(document.createElement("br"));
-      // }
-      // trans.append("근처 버스 정류장 : " + this.buses.length + "개");
-      // trans.appendChild(document.createElement("br"));
-      // for (let bus of this.buses) {
-      //   trans.append("(" + bus.ars + ")" + bus.station + "역 ");
-      //   trans.appendChild(document.createElement("br"));
-      // }
-      // trans.append("근처 따릉이 보관소 : " + this.bikes.length + "개");
-      // trans.appendChild(document.createElement("br"));
-      // for (let bike of this.bikes) {
-      //   trans.append(
-      //     "위치 : " +
-      //       bike.place +
-      //       " | 거치대 수 : " +
-      //       bike.maxcount +
-      //       " | 타입 : " +
-      //       bike.btype
-      //   );
-      //   trans.appendChild(document.createElement("br"));
-      // }
-      // contentEl.appendChild(trans);
-      let dest = document.getElementById("detail-content");
+      this.getBusList(latlng);
+      this.getBikeList(latlng);
+      let dest = document.getElementById("detail-apt-section");
       dest.appendChild(contentEl);
-      console.log("디스플레이 블럭 직전");
-      // el.style.display = "block";
-      console.log("디스플레이 블럭 직후");
-    },
-    displayBlock() {
-      let contentEl = document.createElement("li");
-      let trans = document.createElement("h5");
-      trans.append("근처 지하철 : " + this.subways.length + "개");
-      trans.appendChild(document.createElement("br"));
-      for (let subway of this.subways) {
-        trans.append("(" + subway.train + ")" + subway.station + "역 ");
-        trans.appendChild(document.createElement("br"));
-      }
-      contentEl.appendChild(trans);
-      let dest = document.getElementById("detail-content");
-      dest.appendChild(contentEl);
-      let el = document.getElementById("detail");
       el.style.display = "block";
+    },
+    displaySubway() {
+      this.transScore += 15 * this.subways.length;
+    },
+    displayBus() {
+      this.transScore += 3 * this.buses.length;
+    },
+    displayBike() {
+      this.transScore += this.bikes.length;
     },
     closeDetail() {
       let el = document.getElementById("detail");
+      // let title = document.getElementById("detail_title");
+      let img = document.getElementById("detail-img-section");
+      let apt = document.getElementById("detail-apt-section");
+      let trans = document.getElementById("detail-trans-section");
+      this.transScore = 0;
       el.style.display = "none";
-      let target = document.getElementById("detail-content");
-      this.removeAllChildNods(target);
+      let target = [img, apt, trans];
+      for (let i = 0; i < target.length; i++)
+        this.removeAllChildNods(target[i]);
     },
   },
 };
@@ -903,7 +882,7 @@ document.addEventListener("DOMContentLoaded", function() {});
 .map_wrap {
   position: relative;
   width: 100%;
-  height: 700px;
+  height: 100%;
 }
 #menu_wrap {
   position: absolute;
@@ -1013,6 +992,7 @@ document.addEventListener("DOMContentLoaded", function() {});
   /* font-size: 12px; */
   border-radius: 10px;
 }
+
 .border {
   border-block: 1px;
 }
@@ -1025,4 +1005,45 @@ document.addEventListener("DOMContentLoaded", function() {});
   height: 17px;
   background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
 }
+
+#detail-img-section {
+  position: absolute;
+  border: black solid;
+  left: 15%;
+  top: 15%;
+  width: 180px;
+  height: 180px;
+}
+
+#detail-apt-section {
+  position: absolute;
+  border: black solid;
+  right: 8%;
+  top: 10%;
+  width: 40%;
+  height: 35%;
+  line-height: 70px;
+}
+#detail-apt-section li {
+  list-style: none;
+  font-size: 21px;
+  padding: auto;
+  text-align: center;
+  margin: 15px 15px 0px 0px;
+  /* overflow-y: auto; */
+}
+
+#detail-transport-section {
+  position: absolute;
+  border: black solid;
+  left: 8%;
+  top: 65%;
+  width: 25%;
+  height: 25%;
+}
+/* <div id="detail-img-section"></div>
+          <div id="detail-apt-section"></div>
+          <div id="detail-transport-section"></div>
+          <div id="detail-img-section"></div>
+          <div id="detail-img-section"></div> */
 </style>
