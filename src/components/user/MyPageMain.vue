@@ -62,7 +62,7 @@ export default {
       });
     },
     async joinOut() {
-      if (confirm("정말로 삭제?")) {
+      if (confirm("정말로 탈퇴하시겠습니까?")) {
         console.log(this.userInfo.userid);
         await this.deleteUser(this.userInfo.userid);
         this.$router.push({ name: "Home" });

@@ -13,6 +13,13 @@
             <p>
               your student accommodation near top universities across the globe
             </p>
+            <div class="btn">
+              <b-col lg="4" class="pb-6"
+                ><b-button size="lg" variant="warning" @click="goMap"
+                  >Start~!</b-button
+                ></b-col
+              >
+            </div>
             <!-- <div class="search-bar">
               <v-text-field
                 solo
@@ -91,6 +98,11 @@ export default {
       });
       // this.$router.push(`/search?${this.address}`)
     },
+    goMap() {
+      this.$router.push({
+        name: "Map",
+      });
+    },
   },
   name: "Home",
 
@@ -101,6 +113,9 @@ export default {
 };
 </script>
 <style scoped>
+.btn {
+  margin-top: 50px;
+}
 .logo {
   text-shadow: #000000;
   font-size: 48px;

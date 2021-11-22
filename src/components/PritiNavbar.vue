@@ -4,37 +4,50 @@
       <template #text>
         <div style="display:flex; margin:-15px;">
           <vs-button shadow color="#000" href="/">Home</vs-button>
-          <vs-button shadow color="black" href="#features">Features</vs-button>
+          <vs-button shadow color="black" href="#features" @click="toNotice"
+            >Notice</vs-button
+          >
+          <vs-button shadow color="black" href="#features" @click="toQna"
+            >Q&A</vs-button
+          >
           <!-- <vs-button shadow color="black">How it works</vs-button> -->
-          <vs-button shadow color="black" @click="toPage">Help</vs-button>
+          <vs-button shadow color="black" @click="toPage">Mypage</vs-button>
 
           <!-- <vs-button shadow color="black"> -->
 
           <v-dialog v-model="dialog" width="800" class="login-dialog">
             <template v-slot:activator="{ on, attrs }">
-              <vs-button color="#fff" dark v-bind="attrs" v-on="on">
+              <vs-button
+                color="#fff"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                v-if="isLogin === false"
+              >
                 <span class="color-000"> Login/SignUp</span>
+              </vs-button>
+              <vs-button
+                color="#fff"
+                dark
+                v-if="isLogin === true"
+                @click="logoutUser"
+              >
+                <span class="color-000"> Logout</span>
               </vs-button>
             </template>
 
             <div class="flex">
-              <div class="body-image item">
-                <img
-                  src="https://static-assets-amberstudent.imgix.net/images/login/yuccasofa.jpg"
-                  alt=""
-                />
-              </div>
               <div class="body-main item">
                 <div>
-                  <h3 class="login-text">Sign Up or Login</h3>
-                  <v-text-field
-                    label="Email"
-                    placeholder="Enter Your Email"
-                    outlined
+                  <h3 class="login-text">Sign Up</h3>
+                  <v-btn
+                    block
+                    large
+                    color="green"
+                    class="login-btn"
+                    @click="movePage"
                   >
-                  </v-text-field>
-                  <v-btn block large color="green" class="login-btn">
-                    <span class="color-fff">Continue ></span>
+                    <span class="color-fff" color="#">join</span>
                   </v-btn>
                   <center><p>OR</p></center>
                   <v-btn
@@ -51,10 +64,57 @@
                     <v-icon color="white" dense>mdi-google</v-icon>
                     <span class="color-fff">Continue with Google</span>
                   </v-btn>
-                  <span class="tnc"
-                    >By signing in you agree to our <a>privacy policy</a> and
-                    <a>Terms & conditions</a></span
+                </div>
+              </div>
+              <div class="body-main item">
+                <div>
+                  <h3 class="login-text">Login</h3>
+                  <v-text-field
+                    label="ID"
+                    id="userid"
+                    v-model="user.userid"
+                    required
+                    placeholder="아이디 입력...."
+                    @keyup.enter="confirm"
+                    outlined
                   >
+                  </v-text-field>
+                  <v-text-field
+                    label="Password"
+                    type="password"
+                    id="userpwd"
+                    v-model="user.userpwd"
+                    required
+                    placeholder="비밀번호 입력...."
+                    @keyup.enter="confirm"
+                    outlined
+                  >
+                  </v-text-field>
+                  <v-btn
+                    block
+                    large
+                    color="green"
+                    class="login-btn"
+                    @click="confirm"
+                  >
+                    <span class="color-fff">Login</span>
+                  </v-btn>
+
+                  <center><p>OR</p></center>
+                  <v-btn
+                    href="https://www.facebook.com/"
+                    block
+                    large
+                    color="#3f5b96"
+                    class="login-btn"
+                  >
+                    <v-icon color="white">mdi-facebook</v-icon>
+                    <span class="color-fff">Continue with Facebook</span>
+                  </v-btn>
+                  <v-btn block large color="#cc392f" class="login-btn">
+                    <v-icon color="white" dense>mdi-google</v-icon>
+                    <span class="color-fff">Continue with Google</span>
+                  </v-btn>
                 </div>
               </div>
             </div>
@@ -68,15 +128,55 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
+const memberStore = "memberStore";
+
 export default {
   data() {
     return {
+      user: {
+        userid: null,
+        userpwd: null,
+      },
       dialog: false,
     };
   },
+  computed: {
+    ...mapState(memberStore, ["isLogin", "isLoginError"]),
+  },
   methods: {
+    ...mapActions(memberStore, ["userConfirm", "getUserInfo", "logout"]),
+    async confirm() {
+      await this.userConfirm(this.user);
+      let token = sessionStorage.getItem("access-token");
+      if (this.isLogin) {
+        await this.getUserInfo(token);
+        this.userid = "";
+        this.userpwd = "";
+        alert("로그인 성공!");
+        location.reload();
+        // this.$router.push({ name: "Home" });
+      } else {
+        alert("로그인 실패");
+      }
+    },
+    movePage() {
+      this.$router.push({ name: "MemberJoin" });
+    },
     toPage: function() {
-      this.$router.push({ name: "help" });
+      this.$router.push({ name: "MyPage" });
+    },
+    toQna: function() {
+      this.$router.push({ name: "Qna" });
+    },
+    toNotice: function() {
+      this.$router.push({ name: "Notice" });
+    },
+    async logoutUser() {
+      await this.logout();
+      location.reload();
+      //this.$router.push({ name: "Home" });
     },
   },
 };

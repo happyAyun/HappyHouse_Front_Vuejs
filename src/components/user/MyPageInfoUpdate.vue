@@ -56,9 +56,17 @@ const memberStore = "memberStore";
 export default {
   data() {
     return {
+      // origin: {
+      //   userid: "",
+      //   username: this.userInfo.username,
+      //   email: this.userInfo.email,
+      //   joindate: "",
+      // },
       user: {
+        userid: "",
         username: "",
         email: "",
+        joindate: "",
       },
     };
   },
@@ -68,7 +76,12 @@ export default {
     ...mapState(memberStore, ["userInfo"]),
   },
   created() {
-    this.user = this.userInfo;
+    this.user.username = this.userInfo.username;
+    this.user.email = this.userInfo.email;
+    this.user.userid = this.userInfo.userid;
+    this.user.joindate = this.userInfo.joindate;
+    // console.log(this.user.username);
+    // this.user = this.userInfo;
     //console.log(this.user);
   },
   methods: {
@@ -95,7 +108,10 @@ export default {
       }
     },
     moveMypage() {
-      this.$router.replace({
+      console.log(this.user);
+      console.log(this.userInfo);
+      //console.log(this.origin);
+      this.$router.push({
         name: "MyPageMain",
       });
     },
