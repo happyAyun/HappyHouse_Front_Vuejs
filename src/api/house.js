@@ -44,4 +44,33 @@ function pastList(params, success, fail) {
     .then(success)
     .catch(fail);
 }
-export { sidoList, gugunList, shopList, dongList, houseList, pastList };
+
+function subwayList(params, success, fail) {
+  api
+    .get(`/map/subway`, { params: params })
+    .then(success)
+    .catch(fail);
+}
+function busList(params, success, fail) {
+  api
+    .get(`/map/bus`, { params: params })
+    .then(success)
+    .catch(fail);
+}
+function bikeList(params, success, fail) {
+  api
+    .get(`/map/bike`, { params: params })
+    .then(success)
+    .catch(fail);
+}
+export {
+  sidoList,
+  gugunList,
+  shopList,
+  dongList,
+  houseList,
+  pastList,
+  subwayList,
+  busList,
+  bikeList,
+};

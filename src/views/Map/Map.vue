@@ -57,6 +57,12 @@
         <div id="selectedApt_wrap" class="bg_white">
           <ul id="sAptList"></ul>
         </div>
+        <div id="detail" style="display:none;">
+          <div id="detail_title">
+            <div class="close" @click="this.closeDetail" title="닫기"></div>
+          </div>
+          <ul id="detail-content"></ul>
+        </div>
       </div>
     </div>
   </div>
@@ -95,7 +101,16 @@ export default {
     };
   },
   computed: {
-    ...mapState(houseStore, ["sidos", "guguns", "dongs", "houses", "pastList"]),
+    ...mapState(houseStore, [
+      "sidos",
+      "guguns",
+      "dongs",
+      "houses",
+      "pastList",
+      "subways",
+      "buses",
+      "bikes",
+    ]),
     // sidos() {
     //   return this.$store.state.sidos;
     // },
@@ -124,6 +139,9 @@ export default {
       "getDong",
       "getHouseList",
       "getPastList",
+      "getSubwayList",
+      "getBusList",
+      "getBikeList",
     ]),
     ...mapMutations(houseStore, [
       "CLEAR_SIDO_LIST",
@@ -394,24 +412,45 @@ export default {
     makeDetailOverlayAndList(place, overlay, map, price, infowindow, self) {
       kakao.maps.event.addListener(this.marker, "click", function() {
         let imgPath = require("@/assets/img/waiting.jpg");
-        let makeDetailDiv = self.makeDetailDiv();
+        // let makeDetailDiv = self.makeDetailDiv(place);
         infowindow.close();
         let position = new kakao.maps.LatLng(place.lat, place.lng);
-        let content = `
-          <div class="overlay_info">
-            <div class = "overlay_name" onclick="${makeDetailDiv}"><strong>${place.aptName}</strong></div>
-            <div class="desc">
-              <img src="${imgPath}" alt="">
-              <span class="address">${place.dongName}  ${place.jibun}<br/>
-                ${price}<br/>
-                ${place.area}m² (${place.acreage}평)<br/>
-                ${place.floor}층<br/>
-                ${place.buildYear}년 건축
-              </span>
-            </div>
-          </div>
-          <input type="hidden" name="overlayIndex" value="${self.overlays.length}">
-          `;
+
+        let content = document.createElement("div");
+        content.classList.add("overlay_info");
+
+        let makeDetail = document.createElement("div");
+        makeDetail.classList.add("overlay_name");
+        let strong = document.createElement("strong");
+        strong.innerHTML = place.aptName;
+        strong.classList.add("overlay_strong");
+        makeDetail.appendChild(strong);
+
+        makeDetail.innerHTML = place.aptName;
+        makeDetail.onclick = function() {
+          self.makeDetailDiv(place);
+        };
+        content.appendChild(makeDetail);
+        let div = document.createElement("div");
+        div.classList.add("desc");
+        let img = document.createElement("img");
+        img.src = imgPath;
+        let span = document.createElement("span");
+        span.classList.add("address");
+        span.innerHTML = place.dongName + " " + place.jibun;
+        span.appendChild(document.createElement("br"));
+        span.append(price);
+        span.appendChild(document.createElement("br"));
+        span.append(place.area + "m² (" + place.acreage + "평)");
+        span.appendChild(document.createElement("br"));
+        span.append(place.floor + "층");
+        span.appendChild(document.createElement("br"));
+        span.append(place.buildYear + "년 건축");
+        span.appendChild(document.createElement("br"));
+        div.appendChild(img);
+        div.appendChild(span);
+        content.appendChild(div);
+
         overlay = new kakao.maps.CustomOverlay({
           position: position,
           clickable: true,
@@ -425,8 +464,67 @@ export default {
         self.getPastAptList(place.aptCode);
       });
     },
-    makeDetailDiv() {
-      console.log("테스트");
+    makeDetailDiv(place) {
+      let el = document.getElementById("detail");
+      el.style.display = "block";
+      let contentEl = document.createElement("li");
+      contentEl.append(place.aptName);
+      contentEl.append(this.priceToString(place.recentPrice));
+      console.log(place);
+
+      // contentEl.append(place.);
+      // contentEl.append(place.aptName);
+      // contentEl.append(place.aptName);
+      let img = document.createElement("img");
+      let latlng = {
+        lat: place.lat,
+        lng: place.lng,
+      };
+      this.getSubwayList(latlng);
+      this.getBusList(latlng);
+      this.getBikeList(latlng);
+      // img.src = place.img;
+      // if (!place.img || place.img == "")
+      img.src = require("@/assets/img/waiting.jpg");
+
+      console.log(place.lat + " " + place.lng);
+      // let transportScore =
+      contentEl.appendChild(img);
+      let trans = document.createElement("h5");
+      trans.append("근처 지하철 : " + this.subways.length + "개");
+      trans.appendChild(document.createElement("br"));
+      for (let subway of this.subways) {
+        trans.append("(" + subway.train + ")" + subway.station + "역 ");
+        trans.appendChild(document.createElement("br"));
+      }
+      trans.append("근처 버스 정류장 : " + this.buses.length + "개");
+      trans.appendChild(document.createElement("br"));
+      for (let bus of this.buses) {
+        trans.append("(" + bus.ars + ")" + bus.station + "역 ");
+        trans.appendChild(document.createElement("br"));
+      }
+      trans.append("근처 따릉이 보관소 : " + this.bikes.length + "개");
+      trans.appendChild(document.createElement("br"));
+      for (let bike of this.bikes) {
+        trans.append(
+          "위치 : " +
+            bike.place +
+            " | 거치대 수 : " +
+            bike.maxcount +
+            " | 타입 : " +
+            bike.btype
+        );
+        trans.appendChild(document.createElement("br"));
+      }
+      contentEl.appendChild(trans);
+      let dest = document.getElementById("detail-content");
+      dest.appendChild(contentEl);
+    },
+    closeDetail() {
+      let el = document.getElementById("detail");
+      el.style.display = "none";
+      let target = document.getElementById("detail-content");
+      this.removeAllChildNods(target);
     },
   },
 };
@@ -700,7 +798,7 @@ document.addEventListener("DOMContentLoaded", function() {});
   border-radius: 6px 6px 0 0;
   cursor: pointer;
 }
-.overlay_info .overlay_name strong {
+.overlay_info .overlay_name .overlay_strong {
   background: url(https://user-images.githubusercontent.com/63468607/142641433-44592666-50e4-4b91-9cbc-57a3bbbceaa5.png)
     no-repeat;
   padding-left: 27px;
@@ -868,5 +966,35 @@ document.addEventListener("DOMContentLoaded", function() {});
   padding: 0;
   margin: 5px 0;
   font-size: 14px;
+}
+
+/* */
+#detail {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  bottom: 0;
+  width: 40%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  margin: 10px 10px 0px 0px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+  /* font-size: 12px; */
+  border-radius: 10px;
+}
+.border {
+  border-block: 1px;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
 }
 </style>

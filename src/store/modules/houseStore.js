@@ -4,6 +4,9 @@ import {
   dongList,
   houseList,
   pastList,
+  subwayList,
+  busList,
+  bikeList,
 } from "@/api/house.js";
 
 const houseStore = {
@@ -15,6 +18,9 @@ const houseStore = {
     houses: [],
     house: null,
     pastList: [],
+    subways: [],
+    buses: [],
+    bikes: [],
   },
 
   getters: {},
@@ -40,6 +46,15 @@ const houseStore = {
     },
     SET_PAST_LIST: (state, pastList) => {
       state.pastList = pastList;
+    },
+    SET_SUBWAY_LIST: (state, subways) => {
+      state.subways = subways;
+    },
+    SET_BUS_LIST: (state, buses) => {
+      state.buses = buses;
+    },
+    SET_BIKE_LIST: (state, bikes) => {
+      state.bikes = bikes;
     },
 
     CLEAR_SIDO_LIST: (state) => {
@@ -118,6 +133,39 @@ const houseStore = {
         params,
         ({ data }) => {
           commit("SET_PAST_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async getSubwayList({ commit }, latlng) {
+      await subwayList(
+        latlng,
+        ({ data }) => {
+          commit("SET_SUBWAY_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async getBusList({ commit }, latlng) {
+      await busList(
+        latlng,
+        ({ data }) => {
+          commit("SET_BUS_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async getBikeList({ commit }, latlng) {
+      await bikeList(
+        latlng,
+        ({ data }) => {
+          commit("SET_BIKE_LIST", data);
         },
         (error) => {
           console.log(error);
