@@ -46,6 +46,7 @@ function pastList(params, success, fail) {
 }
 
 function subwayList(params, success, fail) {
+  console.log("api 호출");
   api
     .get(`/map/subway`, { params: params })
     .then(success)

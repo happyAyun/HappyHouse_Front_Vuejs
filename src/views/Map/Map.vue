@@ -110,6 +110,7 @@ export default {
       "subways",
       "buses",
       "bikes",
+      "getSub",
     ]),
     // sidos() {
     //   return this.$store.state.sidos;
@@ -130,6 +131,9 @@ export default {
     },
     pastList: function() {
       this.makePastAptList();
+    },
+    subways: function() {
+      this.displayBlock();
     },
   },
   methods: {
@@ -464,9 +468,10 @@ export default {
         self.getPastAptList(place.aptCode);
       });
     },
-    makeDetailDiv(place) {
-      let el = document.getElementById("detail");
-      el.style.display = "block";
+    async makeDetailDiv(place) {
+      console.log("makeDetailDiv 들어옴!!");
+      // let el = document.getElementById("detail");
+
       let contentEl = document.createElement("li");
       contentEl.append(place.aptName);
       contentEl.append(this.priceToString(place.recentPrice));
@@ -480,9 +485,7 @@ export default {
         lat: place.lat,
         lng: place.lng,
       };
-      this.getSubwayList(latlng);
-      this.getBusList(latlng);
-      this.getBikeList(latlng);
+
       // img.src = place.img;
       // if (!place.img || place.img == "")
       img.src = require("@/assets/img/waiting.jpg");
@@ -490,6 +493,48 @@ export default {
       console.log(place.lat + " " + place.lng);
       // let transportScore =
       contentEl.appendChild(img);
+
+      console.log("getSubwayList 호출 직전" + this.subways);
+
+      this.getSubwayList(latlng);
+      // this.getBusList(latlng);
+      // this.getBikeList(latlng);
+      // console.log("getSubwayList 호출 직후" + this.subways);
+      // let trans = document.createElement("h5");
+      // trans.append("근처 지하철 : " + this.subways.length + "개");
+      // trans.appendChild(document.createElement("br"));
+      // for (let subway of this.subways) {
+      //   trans.append("(" + subway.train + ")" + subway.station + "역 ");
+      //   trans.appendChild(document.createElement("br"));
+      // }
+      // trans.append("근처 버스 정류장 : " + this.buses.length + "개");
+      // trans.appendChild(document.createElement("br"));
+      // for (let bus of this.buses) {
+      //   trans.append("(" + bus.ars + ")" + bus.station + "역 ");
+      //   trans.appendChild(document.createElement("br"));
+      // }
+      // trans.append("근처 따릉이 보관소 : " + this.bikes.length + "개");
+      // trans.appendChild(document.createElement("br"));
+      // for (let bike of this.bikes) {
+      //   trans.append(
+      //     "위치 : " +
+      //       bike.place +
+      //       " | 거치대 수 : " +
+      //       bike.maxcount +
+      //       " | 타입 : " +
+      //       bike.btype
+      //   );
+      //   trans.appendChild(document.createElement("br"));
+      // }
+      // contentEl.appendChild(trans);
+      let dest = document.getElementById("detail-content");
+      dest.appendChild(contentEl);
+      console.log("디스플레이 블럭 직전");
+      // el.style.display = "block";
+      console.log("디스플레이 블럭 직후");
+    },
+    displayBlock() {
+      let contentEl = document.createElement("li");
       let trans = document.createElement("h5");
       trans.append("근처 지하철 : " + this.subways.length + "개");
       trans.appendChild(document.createElement("br"));
@@ -497,28 +542,11 @@ export default {
         trans.append("(" + subway.train + ")" + subway.station + "역 ");
         trans.appendChild(document.createElement("br"));
       }
-      trans.append("근처 버스 정류장 : " + this.buses.length + "개");
-      trans.appendChild(document.createElement("br"));
-      for (let bus of this.buses) {
-        trans.append("(" + bus.ars + ")" + bus.station + "역 ");
-        trans.appendChild(document.createElement("br"));
-      }
-      trans.append("근처 따릉이 보관소 : " + this.bikes.length + "개");
-      trans.appendChild(document.createElement("br"));
-      for (let bike of this.bikes) {
-        trans.append(
-          "위치 : " +
-            bike.place +
-            " | 거치대 수 : " +
-            bike.maxcount +
-            " | 타입 : " +
-            bike.btype
-        );
-        trans.appendChild(document.createElement("br"));
-      }
       contentEl.appendChild(trans);
       let dest = document.getElementById("detail-content");
       dest.appendChild(contentEl);
+      let el = document.getElementById("detail");
+      el.style.display = "block";
     },
     closeDetail() {
       let el = document.getElementById("detail");

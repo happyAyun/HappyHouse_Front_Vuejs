@@ -21,6 +21,7 @@ const houseStore = {
     subways: [],
     buses: [],
     bikes: [],
+    getSub: false,
   },
 
   getters: {},
@@ -48,6 +49,7 @@ const houseStore = {
       state.pastList = pastList;
     },
     SET_SUBWAY_LIST: (state, subways) => {
+      state.getSub = !state.getSub;
       state.subways = subways;
     },
     SET_BUS_LIST: (state, buses) => {
@@ -139,8 +141,8 @@ const houseStore = {
         }
       );
     },
-    async getSubwayList({ commit }, latlng) {
-      await subwayList(
+    getSubwayList({ commit }, latlng) {
+      subwayList(
         latlng,
         ({ data }) => {
           commit("SET_SUBWAY_LIST", data);
@@ -149,9 +151,10 @@ const houseStore = {
           console.log(error);
         }
       );
+      console.log("store에서 호출 끝!");
     },
-    async getBusList({ commit }, latlng) {
-      await busList(
+    getBusList({ commit }, latlng) {
+      busList(
         latlng,
         ({ data }) => {
           commit("SET_BUS_LIST", data);
@@ -161,8 +164,8 @@ const houseStore = {
         }
       );
     },
-    async getBikeList({ commit }, latlng) {
-      await bikeList(
+    getBikeList({ commit }, latlng) {
+      bikeList(
         latlng,
         ({ data }) => {
           commit("SET_BIKE_LIST", data);
