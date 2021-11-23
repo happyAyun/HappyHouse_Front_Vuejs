@@ -50,6 +50,13 @@
                     <span class="color-fff" color="#">join</span>
                   </v-btn>
                   <center><p>OR</p></center>
+                  <div>
+                    <img
+                      src="@/assets/img/kakao_login.png"
+                      alt="카카오 로그인"
+                      @click="kakaoLogin"
+                    />
+                  </div>
                   <v-btn
                     href="https://www.facebook.com/"
                     block
@@ -57,7 +64,7 @@
                     color="#3f5b96"
                     class="login-btn"
                   >
-                    <v-icon color="white">mdi-facebook</v-icon>
+                    <v-icon color="white">mdi-kakao</v-icon>
                     <span class="color-fff">Continue with Facebook</span>
                   </v-btn>
                   <v-btn block large color="#cc392f" class="login-btn">
@@ -146,7 +153,12 @@ export default {
     ...mapState(memberStore, ["isLogin", "isLoginError"]),
   },
   methods: {
-    ...mapActions(memberStore, ["userConfirm", "getUserInfo", "logout"]),
+    ...mapActions(memberStore, [
+      "userConfirm",
+      "getUserInfo",
+      "logout",
+      //"kakaoOauth",
+    ]),
     async confirm() {
       await this.userConfirm(this.user);
       let token = sessionStorage.getItem("access-token");
@@ -160,6 +172,23 @@ export default {
       } else {
         alert("로그인 실패");
       }
+    },
+    async kakaoLogin() {
+      window.location.replace(
+        "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=ad49192b4c4d8d6e220c38d63d62206b&redirect_uri=http://localhost:8080/kakao/auth"
+      );
+      this.$router.push({ name: "Home" });
+      // await this.kakaoOauth();
+      // let token = sessionStorage.getItem("access-token");
+      // if (this.isLogin) {
+      //   await this.getUserInfo(token);
+      //   this.userid = "";
+      //   this.userpwd = "";
+      //   alert("로그인 성공!");
+      //   location.reload();
+      // } else {
+      //   alert("로그인 실패");
+      // }
     },
     movePage() {
       this.$router.push({ name: "MemberJoin" });

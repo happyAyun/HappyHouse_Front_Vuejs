@@ -7,6 +7,7 @@ import Qna from "../views/Qna/Qna.vue";
 import Map from "../views/Map/Map.vue";
 import Member from "../views/user/Member.vue";
 import MyPage from "../views/user/MyPage.vue";
+import OauthMiddle from "../views/user/OauthMiddle.vue";
 
 import MemberLogin from "@/components/user/MemberLogin.vue";
 import MemberJoin from "@/components/user/MemberJoin.vue";
@@ -47,6 +48,11 @@ const onlyAuthUser = async (to, from, next) => {
 };
 
 const routes = [
+  {
+    path: "/kakao/auth",
+    name: "OauthMiddle",
+    component: OauthMiddle,
+  },
   {
     path: "/",
     name: "Home",

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL, APT_SHOP_URL } from "@/config";
+import { API_BASE_URL, APT_SHOP_URL, API_KAKAO_URL } from "@/config";
 
 function apiInstance() {
   const instance = axios.create({
@@ -8,6 +8,7 @@ function apiInstance() {
       "Content-type": "application/json",
     },
   });
+  console.log(instance);
   return instance;
 }
 
@@ -21,4 +22,15 @@ function shopInstance() {
   return instance;
 }
 
-export { apiInstance, shopInstance };
+function kakaoInstance() {
+  const instance = axios.create({
+    baseURL: API_KAKAO_URL,
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+  console.log(instance);
+  return instance;
+}
+
+export { apiInstance, shopInstance, kakaoInstance };

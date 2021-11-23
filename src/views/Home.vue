@@ -9,7 +9,7 @@
             </div>
             <PritiNavbar />
 
-            <h1>HappyHouse</h1>
+            <div id="title" @click="goHome"><h1>HappyHouse</h1></div>
             <p>
               your student accommodation near top universities across the globe
             </p>
@@ -20,49 +20,7 @@
                 ></b-col
               >
             </div>
-            <!-- <div class="search-bar">
-              <v-text-field
-                solo
-                hide-details="auto"
-                v-model="address"
-                clearable
-              ></v-text-field>
-              <v-btn dark x-large color="red" @click="redirectSearch"
-                ><v-icon>mdi-magnify</v-icon>search</v-btn
-              >
-            </div> -->
           </div>
-          <!-- <div class="col col2">
-            <div class="col2-divs col2-beds ">
-              <v-icon x-large color="red">mdi-bed-queen</v-icon>
-              <h5>1M+ Beds</h5>
-              <p>Book your perfect place from our vast selection of listings</p>
-            </div>
-            <div class="col2-divs col2-universities">
-              <v-icon x-large color="red">mdi-school</v-icon>
-              <h5>800+ Universities</h5>
-              <p>Find the best student homes near major universities</p>
-            </div>
-            <div class="col2-divs col2-cities">
-              <v-icon x-large color="red">mdi-city</v-icon>
-              <h5>250+ Cities</h5>
-              <p>We have a strong presence in top cities all over the world</p>
-            </div>
-            <div class="col2-divs col2-reviews">
-              <h3>
-                Trustpilot
-                <v-icon color="green">mdi-star-circle</v-icon>
-                <v-icon color="green">mdi-star-circle</v-icon>
-                <v-icon color="green">mdi-star-circle</v-icon>
-                <v-icon color="green">mdi-star-circle</v-icon>
-                <v-icon color="green">mdi-star-circle</v-icon>
-              </h3>
-              <p>
-                Rated as "Excellent" • Rating 4.8/5 <br />
-                • Based 800+ Reviews by students
-              </p>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -98,6 +56,11 @@ export default {
       });
       // this.$router.push(`/search?${this.address}`)
     },
+    goHome() {
+      this.$router.push({
+        name: "Home",
+      });
+    },
     goMap() {
       this.$router.push({
         name: "Map",
@@ -127,13 +90,6 @@ export default {
   left: 40px;
   top: 30px;
 }
-
-/* .home-card-container {
-  padding: 0px 40px;
-  height: 100%;
-  width: 100%;
-  background-image: url("../assets/home.jpg");
-} */
 
 .home-card {
   height: 96vh;

@@ -9,6 +9,14 @@ async function login(user, success, fail) {
     .catch(fail);
 }
 
+async function kakao(params, success, fail) {
+  console.log(params);
+  await api
+    .get(`/kakao/login/${params}`)
+    .then(success)
+    .catch(fail);
+}
+
 async function findById(userid, success, fail) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
   await api
@@ -48,4 +56,4 @@ function idCheck(userid, success, fail) {
 
 // function logout(success, fail)
 
-export { login, findById, updateUser, deleteUser, joinUser, idCheck };
+export { login, findById, updateUser, deleteUser, joinUser, idCheck, kakao };

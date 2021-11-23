@@ -1,12 +1,14 @@
 import jwt_decode from "jwt-decode";
-import { login } from "@/api/member.js";
 import {
+  login,
   findById,
   updateUser,
   deleteUser,
   joinUser,
   idCheck,
-} from "../../api/member";
+  kakao,
+} from "@/api/member.js";
+// import { kakaoLogin } from "@/api/oauth.js";
 
 const memberStore = {
   namespaced: true,
@@ -66,6 +68,48 @@ const memberStore = {
         () => {}
       );
     },
+    async kakaoLogin({ commit }, codes) {
+      console.log(codes);
+      await kakao(
+        codes,
+        (response) => {
+          console.log(response);
+          if (response.data.message === "success") {
+            let token = response.data["access-token"];
+            commit("SET_IS_LOGIN", true);
+            commit("SET_IS_LOGIN_ERROR", false);
+            sessionStorage.setItem("access-token", token);
+          } else {
+            commit("SET_IS_LOGIN", false);
+            commit("SET_IS_LOGIN_ERROR", true);
+          }
+        },
+        () => {}
+      );
+    },
+    // async kakaoOauth({ commit }) {
+    //   const params = {
+    //     response_type: "code",
+    //     client_id: "ad49192b4c4d8d6e220c38d63d62206b",
+    //     redirect_uri: "http://localhost:9999/kakao/auth",
+    //   };
+    //   console.log(params);
+    //   await kakaoLogin(
+    //     params,
+    //     (response) => {
+    //       if (response.data.message === "success") {
+    //         let token = response.data["access-token"];
+    //         commit("SET_IS_LOGIN", true);
+    //         commit("SET_IS_LOGIN_ERROR", false);
+    //         sessionStorage.setItem("access-token", token);
+    //       } else {
+    //         commit("SET_IS_LOGIN", false);
+    //         commit("SET_IS_LOGIN_ERROR", true);
+    //       }
+    //     },
+    //     () => {}
+    //   );
+    // },
     getUserInfo({ commit }, token) {
       let decode_token = jwt_decode(token);
       findById(

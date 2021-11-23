@@ -104,10 +104,22 @@ export default {
     };
   },
   computed: {
-    ...mapState(memberStore, ["isUserId", "isOK"]),
+    ...mapState(memberStore, ["isUserId", "isOK", "isLogin"]),
   },
   methods: {
-    ...mapActions(memberStore, ["idChecking", "joinUser"]),
+    ...mapActions(memberStore, ["idChecking", "joinUser", "kakaoLogin"]),
+    async getToken() {
+      await this.kakaoLogin(this.code);
+      let token = sessionStorage.getItem("access-token");
+      if (this.isLogin) {
+        console.log("성공!!!");
+        this.getUserInfo(token);
+        alert("로그인 성공!");
+        this.$router.push({ name: "Home" });
+      } else {
+        alert("로그인 실패");
+      }
+    },
     checkId() {
       console.log("유효성검사");
       console.log(this.user.userid);
