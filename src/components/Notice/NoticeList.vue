@@ -14,6 +14,10 @@
         </b-col>
       </b-row>
       <div>
+        <b-dropdown text="선택">
+          <b-dropdown-item>An item</b-dropdown-item>
+          <b-dropdown-item>Another item</b-dropdown-item>
+        </b-dropdown>
         <b-form-input
           style="width:200px"
           v-model="text"

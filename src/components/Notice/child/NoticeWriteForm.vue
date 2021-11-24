@@ -30,17 +30,31 @@
             ></b-form-textarea>
           </b-form-group>
 
+          <b-button pill variant="outline-danger" @click="goList"
+            >목록</b-button
+          >
           <b-button
             type="submit"
-            variant="primary"
-            class="m-1"
+            class="NoticeRegistBtn"
+            pill
+            variant="info"
             v-if="this.type === 'register'"
+            >글작성</b-button
+          >
+          <b-button
+            type="submit"
+            class="NoticeRegistBtn"
+            pill
+            variant="info"
+            v-else
+            >글수정</b-button
+          >
+          <!-- <b-button class="QnaRegistBtn" pill variant="info" v-else
             >글작성</b-button
           >
           <b-button type="submit" variant="primary" class="m-1" v-else
             >글수정</b-button
-          >
-          <b-button type="reset" variant="danger" class="m-1">초기화</b-button>
+          > -->
         </b-form>
       </b-col>
     </b-row>
@@ -93,6 +107,9 @@ export default {
     }
   },
   methods: {
+    goList() {
+      this.$router.push({ name: "NoticeList" });
+    },
     onSubmit(event) {
       event.preventDefault();
 
@@ -168,4 +185,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.NoticeRegistBtn {
+  margin-left: 450px;
+}
+</style>

@@ -3,8 +3,12 @@
     <b-row class="mb-1">
       <b-col style="text-align: left">
         <b-form @submit="onSubmit" @reset="onReset">
+          <b-row class="my-1">
+            <b-col sm="3"> </b-col>
+          </b-row>
           <b-form-group
             id="subject-group"
+            v-model="article.subject"
             label="제목:"
             label-for="subject"
             description="제목을 입력하세요."
@@ -29,18 +33,25 @@
               ref="content"
             ></b-form-textarea>
           </b-form-group>
-
+          <b-button pill variant="outline-danger" @click="goList"
+            >목록</b-button
+          >
           <b-button
             type="submit"
-            variant="primary"
-            class="m-1"
+            class="QnaRegistBtn"
+            pill
+            variant="info"
             v-if="this.type === 'register'"
             >글작성</b-button
           >
-          <b-button type="submit" variant="primary" class="m-1" v-else
+          <b-button
+            type="submit"
+            class="QnaRegistBtn"
+            pill
+            variant="info"
+            v-else
             >글수정</b-button
           >
-          <b-button type="reset" variant="danger" class="m-1">초기화</b-button>
         </b-form>
       </b-col>
     </b-row>
@@ -57,6 +68,7 @@ export default {
   name: "QnaWriteForm",
   data() {
     return {
+      flagTitle: false,
       article: {
         articleno: 0,
         userid: "",
@@ -73,16 +85,13 @@ export default {
     ...mapState(memberStore, ["userInfo"]),
   },
   created() {
+    this.flagTitle = this.article.subject.length > 0 ? "true" : "false";
     this.article.userid = this.userInfo.userid;
 
     if (this.type === "modify") {
       getArticle(
         this.$route.params.articleno,
         ({ data }) => {
-          // this.article.no = data.article.no;
-          // this.article.writer = data.article.writer;
-          // this.article.title = data.article.title;
-          // this.article.content = data.article.content;
           this.article = data;
         },
         (error) => {
@@ -93,6 +102,12 @@ export default {
     }
   },
   methods: {
+    goList() {
+      this.$router.push({ name: "QnaList" });
+    },
+    titleIsOK() {
+      this.flagTitle = this.article.subject.length > 0 ? "true" : "false";
+    },
     onSubmit(event) {
       event.preventDefault();
 
@@ -168,4 +183,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.QnaRegistBtn {
+  margin-left: 450px;
+}
+</style>

@@ -37,32 +37,33 @@
     <b-col class="text-left">
       <b-button variant="warning" @click="listArticle">목록</b-button>
     </b-col>
-    <b-col class="text-right">
-      <b-button pill variant="info" @click="moveModifyArticle">수정</b-button>
-      <b-button pill variant="outline-danger" @click="deleteArticle"
-        >삭제</b-button
-      >
-    </b-col>
+    <div v-if="article.userid == this.userInfo.userid">
+      <b-col class="text-right">
+        <b-button pill variant="info" @click="moveModifyArticle">수정</b-button>
+        <b-button pill variant="outline-danger" @click="deleteArticle"
+          >삭제</b-button
+        >
+      </b-col>
+    </div>
   </div>
 </template>
 
 <script>
 import { getArticle, deleteArticle } from "@/api/qna";
 import QnaReply from "./child/QnaReply.vue";
-// import { mapState } from "vuex";
+import { mapState } from "vuex";
 
-// const memberStore = "memberStore";
+const memberStore = "memberStore";
 
 export default {
   components: { QnaReply },
   data() {
     return {
       article: {},
-      //  userid: this.userInfo.userid,
     };
   },
   computed: {
-    // ...mapState(memberStore, ["userInfo"]),
+    ...mapState(memberStore, ["userInfo"]),
     message() {
       if (this.article.content)
         return this.article.content.split("\n").join("<br>");
