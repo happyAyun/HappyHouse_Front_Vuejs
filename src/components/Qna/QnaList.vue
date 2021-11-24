@@ -76,7 +76,7 @@ export default {
   created() {
     listArticle(
       (response) => {
-        this.articles = response.data;
+        this.rows = response.data;
       },
       (error) => {
         console.log(error);
@@ -87,10 +87,10 @@ export default {
     moveWrite() {
       this.$router.push({ name: "QnaWrite" });
     },
-    viewArticle(article) {
+    viewArticle(row) {
       this.$router.push({
         name: "QnaView",
-        params: { articleno: article.articleno },
+        params: { articleno: row.row.articleno },
       });
     },
   },

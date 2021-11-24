@@ -2,9 +2,9 @@ import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
-function listArticle(param, success, fail) {
+function listArticle(success, fail) {
   api
-    .get(`/qna`, { params: param })
+    .get(`/qna`)
     .then(success)
     .catch(fail);
 }
