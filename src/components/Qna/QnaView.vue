@@ -49,15 +49,20 @@
 <script>
 import { getArticle, deleteArticle } from "@/api/qna";
 import QnaReply from "./child/QnaReply.vue";
+// import { mapState } from "vuex";
+
+// const memberStore = "memberStore";
 
 export default {
   components: { QnaReply },
   data() {
     return {
       article: {},
+      //  userid: this.userInfo.userid,
     };
   },
   computed: {
+    // ...mapState(memberStore, ["userInfo"]),
     message() {
       if (this.article.content)
         return this.article.content.split("\n").join("<br>");

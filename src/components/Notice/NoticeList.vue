@@ -13,6 +13,13 @@
           >
         </b-col>
       </b-row>
+      <div>
+        <b-form-input
+          style="width:200px"
+          v-model="text"
+          placeholder="Enter your name"
+        ></b-form-input>
+      </div>
       <b-row>
         <b-col>
           <b-table

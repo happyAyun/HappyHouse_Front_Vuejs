@@ -4,6 +4,9 @@
       <template #text>
         <div style="display:flex; margin:-15px;">
           <vs-button shadow color="#000" href="/">Home</vs-button>
+          <vs-button shadow color="black" href="#features" @click="toMap"
+            >Map</vs-button
+          >
           <vs-button shadow color="black" href="#features" @click="toNotice"
             >Notice</vs-button
           >
@@ -57,20 +60,6 @@
                       @click="kakaoLogin"
                     />
                   </div>
-                  <v-btn
-                    href="https://www.facebook.com/"
-                    block
-                    large
-                    color="#3f5b96"
-                    class="login-btn"
-                  >
-                    <v-icon color="white">mdi-kakao</v-icon>
-                    <span class="color-fff">Continue with Facebook</span>
-                  </v-btn>
-                  <v-btn block large color="#cc392f" class="login-btn">
-                    <v-icon color="white" dense>mdi-google</v-icon>
-                    <span class="color-fff">Continue with Google</span>
-                  </v-btn>
                 </div>
               </div>
               <div class="body-main item">
@@ -105,22 +94,6 @@
                     @click="confirm"
                   >
                     <span class="color-fff">Login</span>
-                  </v-btn>
-
-                  <center><p>OR</p></center>
-                  <v-btn
-                    href="https://www.facebook.com/"
-                    block
-                    large
-                    color="#3f5b96"
-                    class="login-btn"
-                  >
-                    <v-icon color="white">mdi-facebook</v-icon>
-                    <span class="color-fff">Continue with Facebook</span>
-                  </v-btn>
-                  <v-btn block large color="#cc392f" class="login-btn">
-                    <v-icon color="white" dense>mdi-google</v-icon>
-                    <span class="color-fff">Continue with Google</span>
                   </v-btn>
                 </div>
               </div>
@@ -159,6 +132,9 @@ export default {
       "logout",
       //"kakaoOauth",
     ]),
+    toMap() {
+      this.$router.push({ name: "Map" });
+    },
     async confirm() {
       await this.userConfirm(this.user);
       let token = sessionStorage.getItem("access-token");
@@ -173,11 +149,11 @@ export default {
         alert("로그인 실패");
       }
     },
-    async kakaoLogin() {
+    kakaoLogin() {
       window.location.replace(
         "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=ad49192b4c4d8d6e220c38d63d62206b&redirect_uri=http://localhost:8080/kakao/auth"
       );
-      this.$router.push({ name: "Home" });
+      // location.reload();
       // await this.kakaoOauth();
       // let token = sessionStorage.getItem("access-token");
       // if (this.isLogin) {

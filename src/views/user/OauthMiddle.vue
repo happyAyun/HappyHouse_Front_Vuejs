@@ -38,10 +38,11 @@ export default {
       await this.kakaoLogin(this.code);
       let token = sessionStorage.getItem("access-token");
       if (this.isLogin) {
+        location.reload();
         console.log("성공!!!");
         this.getUserInfo(token);
-        alert("로그인 성공!");
-        this.$router.push({ name: "Home" });
+        //alert("로그인 성공!");
+        // this.$router.push({ name: "Home" });
       } else {
         alert("로그인 실패");
       }

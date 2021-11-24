@@ -61,10 +61,6 @@ export default {
         this.$router.push({ name: "Home" });
       }
     },
-    async logoutUser() {
-      await this.logout();
-      this.$router.push({ name: "Home" });
-    },
   },
 };
 </script>

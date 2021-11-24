@@ -76,8 +76,10 @@ const memberStore = {
           console.log(response);
           if (response.data.message === "success") {
             let token = response.data["access-token"];
+            commit("SET_USER_INFO", response.data.userInfo);
             commit("SET_IS_LOGIN", true);
             commit("SET_IS_LOGIN_ERROR", false);
+            alert("로그인 성공");
             sessionStorage.setItem("access-token", token);
           } else {
             commit("SET_IS_LOGIN", false);
