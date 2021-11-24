@@ -4,19 +4,18 @@
       <div outlined class="home-card">
         <div class="content-container">
           <div class="col col1">
-            <div class="logo">
+            <div class="logo" @click="goHome">
               HappyHouse
             </div>
             <PritiNavbar />
 
-            <div id="title" @click="goHome"><h1>HappyHouse</h1></div>
-            <p>
-              your student accommodation near top universities across the globe
+            <p class="titleText">
+              당신의 집을 찾아보세요.
             </p>
             <div class="btn">
-              <b-col lg="4" class="pb-6"
-                ><b-button size="lg" variant="warning" @click="goMap"
-                  >Start~!</b-button
+              <b-col lg="4" class="pb-6">
+                <b-button size="lg" variant="warning" @click="goMap"
+                  >GO~!!!</b-button
                 ></b-col
               >
             </div>
@@ -25,13 +24,7 @@
       </div>
     </div>
 
-    <div class="add-property" id="features">
-      <h1>Agents, Landlords or Property Managers</h1>
-      <p>
-        Post your listing and market to thousands of students on AmberStudent.
-      </p>
-      <v-btn color="secondary" large outlined>List propeerty</v-btn>
-    </div>
+    <!-- <div class="add-property" id="features"></div> -->
     <Footer />
   </div>
 </template>
@@ -76,6 +69,11 @@ export default {
 };
 </script>
 <style scoped>
+.titleText {
+  color: rgb(3, 1, 8);
+  font-weight: 600;
+  font-size: 3pc;
+}
 .btn {
   margin-top: 50px;
 }

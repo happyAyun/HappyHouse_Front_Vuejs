@@ -1,16 +1,13 @@
 <template>
   <div class="footer">
     <div class="foot-col">
-      <h1>pgfinder</h1>
+      <h1>해피하우스</h1>
       <p class="font-weight-100">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
-        deserunt quae perferendis excepturi nisi ad maxime facilis debitis
-        assumenda. Aut alias neque velit nam totam aperiam soluta magni
-        necessitatibus quas.
+        당신에게 알맞은 집을 바로 찾아드립니다.
       </p>
     </div>
     <div class="foot-col">
-      <h3>Links</h3>
+      <!-- <h3>Links</h3>
       <ul class="no-dot l-padding-0 font-weight-200">
         <li>
           Home
@@ -27,10 +24,10 @@
         <li>
           Contact
         </li>
-      </ul>
+      </ul> -->
     </div>
     <div class="foot-col social-medialinks">
-      <ul class="no-dot l-padding-0 font-weight-200">
+      <!-- <ul class="no-dot l-padding-0 font-weight-200">
         <li>
           <button @click="geocode">
             Test
@@ -50,11 +47,10 @@
         <li>
           Sitemap
         </li>
-      </ul>
+      </ul> -->
     </div>
     <div class="foot-col contact-form">
-      <h3>Contact</h3>
-      <p class="text-color-grey">Call or WhatsApp us at:</p>
+      <h3>관리자 정보</h3>
       <a class="a-button" href="#">0110</a>
       <br />
       <a class="a-button" href="#">1254</a>
@@ -62,8 +58,7 @@
       <a class="a-button" href="#">abhishek@gmail.com</a>
       <br />
       <p class="font-weight-100">
-        Our phone lines are active between 9AM - 9PM IST. For any queries you
-        can expect a response within 24 hours from our team.
+        홈페이지에 의견이 있으시다면 언제든지 연락주세요.
       </p>
     </div>
   </div>

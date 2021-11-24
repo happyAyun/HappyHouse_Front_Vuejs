@@ -14,15 +14,19 @@
         </b-col>
       </b-row>
       <div>
-        <b-dropdown text="선택">
-          <b-dropdown-item>An item</b-dropdown-item>
-          <b-dropdown-item>Another item</b-dropdown-item>
-        </b-dropdown>
-        <b-form-input
-          style="width:200px"
-          v-model="text"
-          placeholder="Enter your name"
-        ></b-form-input>
+        <b-row class="mb-1">
+          <b-dropdown text="선택" class="selectCol1">
+            <b-dropdown-item>제목</b-dropdown-item>
+            <b-dropdown-item>작성자</b-dropdown-item>
+            <b-dropdown-item>글번호</b-dropdown-item>
+          </b-dropdown>
+          <b-form-input
+            class="selectCol2"
+            style="width:200px"
+            v-model="text"
+            placeholder="Enter your name"
+          ></b-form-input>
+        </b-row>
       </div>
       <b-row>
         <b-col>
@@ -36,12 +40,22 @@
           </b-table>
         </b-col>
       </b-row>
+      <div class="mt-3 pagenav">
+        <b-pagination
+          v-model="currentPage"
+          pills
+          :total-rows="rows"
+        ></b-pagination>
+      </div>
     </b-container>
   </div>
 </template>
 
 <script>
 import { listArticle } from "@/api/notice";
+import { mapActions } from "vuex";
+
+const noticeStore = "noticeStore";
 
 export default {
   name: "NoticeList",
@@ -55,8 +69,11 @@ export default {
         { key: "regtime", label: "작성일", tdClass: "tdClass" },
         { key: "count", label: "조회수", tdClass: "tdClass" },
       ],
+      rows: 100,
+      currentPage: 10,
     };
   },
+  computed: {},
   created() {
     let param = {
       pg: 1,
@@ -92,6 +109,19 @@ export default {
 </script>
 
 <style>
+.pagenav {
+  margin-left: 380px;
+}
+.selectCol1 {
+  display: inline-block;
+  float: inline-start;
+  margin-left: 50px;
+}
+.selectCol2 {
+  display: inline-block;
+  float: inline-start;
+  margin-left: 10px;
+}
 .tdClass {
   width: 50px;
   text-align: center;
