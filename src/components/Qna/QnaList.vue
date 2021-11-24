@@ -6,55 +6,75 @@
           <b-alert show variant="warning"><h1>Q&A</h1></b-alert>
         </b-col>
       </b-row>
-      <b-row class="mb-1">
-        <b-col class="text-right">
-          <b-button pill variant="outline-success" @click="moveWrite()"
-            >글쓰기</b-button
-          >
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-table
-            striped
-            hover
-            :items="articles"
-            :fields="fields"
-            @row-clicked="viewArticle"
-          >
-          </b-table>
-        </b-col>
-      </b-row>
+
+      <vue-good-table
+        :columns="columns"
+        :rows="rows"
+        @on-row-click="viewArticle"
+        :search-options="{
+          enabled: true,
+          placeholder: '검색어를 입력하세요',
+        }"
+        :pagination-options="{
+          enabled: true,
+          mode: 'pages',
+          perPage: 5,
+        }"
+      />
+      <div class="under">
+        <b-row class="mb-1">
+          <b-col class="text-right">
+            <b-button pill variant="outline-success" @click="moveWrite()"
+              >글쓰기</b-button
+            >
+          </b-col>
+        </b-row>
+      </div>
     </b-container>
   </div>
 </template>
-
 <script>
 import { listArticle } from "@/api/qna";
+import "vue-good-table/dist/vue-good-table.css";
+import { VueGoodTable } from "vue-good-table";
 
 export default {
   name: "QnaList",
+  components: {
+    VueGoodTable,
+  },
   data() {
     return {
-      articles: [],
-      fields: [
-        { key: "articleno", label: "글번호", tdClass: "tdClass" },
-        { key: "subject", label: "제목", tdClass: "tdSubject" },
-        { key: "userid", label: "작성자", tdClass: "tdClass" },
-        { key: "regtime", label: "작성일", tdClass: "tdClass" },
-        { key: "hit", label: "조회수", tdClass: "tdClass" },
+      columns: [
+        {
+          label: "글번호",
+          field: "articleno",
+          type: "number",
+        },
+        {
+          label: "제목",
+          field: "subject",
+        },
+        {
+          label: "작성자",
+          field: "userid",
+        },
+        {
+          label: "작성일자",
+          field: "regtime",
+        },
+        {
+          label: "조회수",
+          field: "count",
+          type: "number",
+        },
       ],
+      rows: [],
     };
   },
+  computed: {},
   created() {
-    let param = {
-      pg: 1,
-      spp: 10,
-      key: null,
-      word: null,
-    };
     listArticle(
-      param,
       (response) => {
         this.articles = response.data;
       },
@@ -62,9 +82,6 @@ export default {
         console.log(error);
       }
     );
-    // http.get(`/qna`).then(({ data }) => {
-    //   this.articles = data;
-    // });
   },
   methods: {
     moveWrite() {
@@ -88,5 +105,8 @@ export default {
 .tdSubject {
   width: 300px;
   text-align: center;
+}
+.under {
+  margin-top: 30px;
 }
 </style>

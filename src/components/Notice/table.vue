@@ -1,36 +1,15 @@
 <template>
   <div>
-    <b-container class="bv-example-row mt-3">
-      <b-row>
-        <b-col>
-          <b-alert show variant="success"><h1>공지사항</h1></b-alert>
-        </b-col>
-      </b-row>
-
-      <vue-good-table
-        :columns="columns"
-        :rows="rows"
-        @on-row-click="viewArticle"
-        :search-options="{
-          enabled: true,
-          placeholder: '검색어를 입력하세요',
-        }"
-        :pagination-options="{
-          enabled: true,
-          mode: 'pages',
-          perPage: 5,
-        }"
-      />
-      <div class="under">
-        <b-row class="mb-1">
-          <b-col class="text-right">
-            <b-button pill variant="outline-success" @click="moveWrite()"
-              >글쓰기</b-button
-            >
-          </b-col>
-        </b-row>
-      </div>
-    </b-container>
+    <b-row class="mb-1">
+      <b-col class="text-right">
+        <b-button pill variant="outline-success" @click="moveWrite()"
+          >글쓰기</b-button
+        >
+      </b-col>
+    </b-row>
+    <div>
+      <vue-good-table :columns="columns" :rows="rows" />
+    </div>
   </div>
 </template>
 
@@ -58,10 +37,16 @@ export default {
         {
           label: "작성자",
           field: "userid",
+          type: "date",
+          dateInputFormat: "yyyy-MM-dd",
+          dateOutputFormat: "MMM do yy",
         },
         {
           label: "작성일자",
           field: "regtime",
+          type: "date",
+          dateInputFormat: "yyyy-MM-dd",
+          dateOutputFormat: "MMM do yy",
         },
         {
           label: "조회수",
@@ -74,34 +59,38 @@ export default {
   },
   computed: {},
   created() {
+    // let param = {
+    //   pg: 1,
+    //   spp: 10,
+    //   key: null,
+    //   word: null,
+    // };
     listArticle(
+      // param,
       (response) => {
         this.rows = response.data;
         console.log(response.data);
-        console.log(this.rows);
       },
       (error) => {
         console.log(error);
       }
     );
+    // http.get(`/qna`).then(({ data }) => {
+    //   this.articles = data;
+    // });
   },
   methods: {
     moveWrite() {
       this.$router.push({ name: "NoticeWrite" });
     },
-    viewArticle(row) {
-      console.log(row);
+    viewArticle(article) {
       this.$router.push({
         name: "NoticeView",
-        params: { articleno: row.row.articleno },
+        params: { articleno: article.articleno },
       });
     },
   },
 };
 </script>
 
-<style>
-.under {
-  margin-top: 30px;
-}
-</style>
+<style></style>

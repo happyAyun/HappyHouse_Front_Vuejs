@@ -10,13 +10,11 @@ const noticeStore = {
     value: "",
   },
   getters: {
-    checkUserInfo: function(state) {
-      return state.userInfo;
-    },
+  
   },
   mutations: {
-    SET_IS_LOGIN: (state, isLogin) => {
-      state.isLogin = isLogin;
+    SET_IS_PG: (state, page) => {
+      state.pg = page;
     },
     
   },

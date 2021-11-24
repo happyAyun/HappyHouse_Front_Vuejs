@@ -4,12 +4,18 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "./plugins/vuesax";
+import VueGoodTablePlugin from "vue-good-table";
+
+// import the styles
+import "vue-good-table/dist/vue-good-table.css";
+
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import memberStore from "./store/modules/memberStore";
+Vue.use(VueGoodTablePlugin);
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
