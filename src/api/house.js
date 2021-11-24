@@ -46,7 +46,6 @@ function pastList(params, success, fail) {
 }
 
 function subwayList(params, success, fail) {
-  console.log("api 호출");
   api
     .get(`/map/subway`, { params: params })
     .then(success)
@@ -64,6 +63,20 @@ function bikeList(params, success, fail) {
     .then(success)
     .catch(fail);
 }
+
+function radius(params, success, fail) {
+  api
+    .get(`/map/radius`, { params: params })
+    .then(success)
+    .catch(fail);
+}
+
+function defaultSubway(success, fail) {
+  api
+    .get(`/map/dsubway`)
+    .then(success)
+    .catch(fail);
+}
 export {
   sidoList,
   gugunList,
@@ -74,4 +87,6 @@ export {
   subwayList,
   busList,
   bikeList,
+  radius,
+  defaultSubway,
 };

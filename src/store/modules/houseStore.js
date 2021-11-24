@@ -7,6 +7,8 @@ import {
   subwayList,
   busList,
   bikeList,
+  radius,
+  defaultSubway,
 } from "@/api/house.js";
 
 const houseStore = {
@@ -21,7 +23,7 @@ const houseStore = {
     subways: [],
     buses: [],
     bikes: [],
-    getSub: false,
+    dSubways: [],
   },
 
   getters: {},
@@ -49,7 +51,6 @@ const houseStore = {
       state.pastList = pastList;
     },
     SET_SUBWAY_LIST: (state, subways) => {
-      state.getSub = !state.getSub;
       state.subways = subways;
     },
     SET_BUS_LIST: (state, buses) => {
@@ -57,6 +58,9 @@ const houseStore = {
     },
     SET_BIKE_LIST: (state, bikes) => {
       state.bikes = bikes;
+    },
+    SET_DSUB_LIST: (state, dSubways) => {
+      state.dSubways = dSubways;
     },
 
     CLEAR_SIDO_LIST: (state) => {
@@ -169,6 +173,27 @@ const houseStore = {
         latlng,
         ({ data }) => {
           commit("SET_BIKE_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getRadius({ commit }, latlng) {
+      radius(
+        latlng,
+        ({ data }) => {
+          commit("SET_HOUSE_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getDefaultSubway: ({ commit }) => {
+      defaultSubway(
+        ({ data }) => {
+          commit("SET_DSUB_LIST", data);
         },
         (error) => {
           console.log(error);

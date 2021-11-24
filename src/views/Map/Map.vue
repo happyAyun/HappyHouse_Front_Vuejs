@@ -50,28 +50,51 @@
           카페
         </button>
       </div> -->
+      <div id="result"></div>
       <div class="map_wrap">
         <div
           id="map"
           style="width:98%;height:900px; position: relative; overflow:hidden; margin-left:15px;"
         ></div>
-        <div id="menu_wrap" class="bg_white">
+        <div id="menu_wrap" class="bg_white" style="display:none;">
           <ul id="placesList"></ul>
         </div>
-        <div id="selectedApt_wrap" class="bg_white">
-          <ul id="sAptList"></ul>
-        </div>
-        <div id="detail" style="display:none;">
-          <div id="detail_title">
-            <div class="close" @click="this.closeDetail" title="닫기"></div>
-          </div>
-          <div id="detail-img-section"></div>
-          <div id="detail-apt-section"></div>
-          <div id="detail-transport-section">
-            <h4>{{ transScore }} 점!</h4>
-          </div>
-          <!-- <div id="detail-img-section"></div>
-          <div id="detail-img-section"></div> -->
+        <div id="selectedApt_wrap" class="bg_white" style="display:none">
+          <div id="img_section"></div>
+          <button class="accordion " @click="this.togleApt">
+            <p id="aptDetail_title"></p>
+            <ul id="aptDetail" style="display:none"></ul>
+          </button>
+          <button class="accordion">
+            <div>거래기록</div>
+            <table>
+              <colgroup>
+                <col width="30%" />
+                <col width="29%" />
+                <col width="8%" />
+                <col width="35%" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th class="table-col">거래금액</th>
+                  <th class="table-col">거래일</th>
+                  <th class="table-col">층 수</th>
+                  <th class="table-col">실주거공간</th>
+                </tr>
+              </thead>
+              <tbody id="sAptList"></tbody>
+            </table>
+          </button>
+          <div style="text-align:center">근처 교통</div>
+          <transport-chart
+            :subLen="subLen"
+            :busLen="busLen"
+            :bikeLen="bikeLen"
+          ></transport-chart>
+          <div></div>
+          <button class="accordion">
+            <div></div>
+          </button>
         </div>
       </div>
     </div>
@@ -81,12 +104,16 @@
 <script>
 import PritiNavbar from "@/components/PritiNavbar.vue";
 import { mapState, mapActions, mapMutations } from "vuex";
+import TransportChart from "@/components/Map/TransportChart.vue";
+
 const houseStore = "houseStore";
 export default {
   name: "Map",
   components: {
     PritiNavbar,
+    TransportChart,
   },
+
   data() {
     return {
       map: null,
@@ -100,15 +127,49 @@ export default {
       coronaInfowindows: [],
       bikeMarkers: [],
       bikeInfowindows: [],
+      subwayMarkers: [],
+      subwayInfowindow: null,
       inspectorFlag: false,
       cafeFlag: false,
       bikeFlag: false,
-      geocode: null,
+      pastFlag: false,
+      aptFlag: false,
+      sHouse: null,
+      geocoder: null,
       cy: null,
       cx: null,
       overlay: null,
       overlays: [],
       transScore: 0,
+      subLen: 0,
+      busLen: 0,
+      bikeLen: 0,
+      boundFlag: false,
+      subwayLevelFlag: false,
+      limit: 5,
+      chartData: {
+        labels: ["지하철", "버스", "따릉이"],
+        datasets: [
+          {
+            backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
+            data: [this.subLen, this.busLen, this.bikeLen],
+          },
+        ],
+      },
+      // chartOptions: {
+      //   rsponsive: true,
+      //   aspectRatio: 1.19,
+      //   legend: {
+      //     display: false, // 차트 내 범례 디스플레이 비활성화
+      //   },
+      //   scales: {
+      //     xAxes: this.xAxes, // x축 세부 설정, 별도 getter로 분리
+      //     yAxes: this.yAxes, // y축 세부 설정, 별도 getter로 분리
+      //   },
+      //   animation: {
+      //     duration: 0, // 트랜지션 효과 비활성화
+      //   },
+      // },
       sidoCode: null,
       gugunCode: null,
       dongCode: null,
@@ -124,8 +185,16 @@ export default {
       "subways",
       "buses",
       "bikes",
-      "getSub",
+      "dSubways",
     ]),
+    centerPos: function() {
+      if (this.map == null) return;
+      let latlng = this.map.getCenter();
+      // let el = document.getElementById("result");
+      // el.innerText = [latlng.getLat(), latlng.getLng()];
+      return [latlng.getLat(), latlng.getLng()];
+    },
+
     // sidos() {
     //   return this.$store.state.sidos;
     // },
@@ -155,6 +224,15 @@ export default {
     bikes: function() {
       this.displayBike();
     },
+    dongCode: function() {
+      this.boundFlag = true;
+    },
+    dSubways: function() {
+      this.displayTotalSubway();
+    },
+    subLen: function() {
+      console.log("subLen 바뀜!!");
+    },
   },
   methods: {
     ...mapActions(houseStore, [
@@ -166,6 +244,8 @@ export default {
       "getSubwayList",
       "getBusList",
       "getBikeList",
+      "getRadius",
+      "getDefaultSubway",
     ]),
     ...mapMutations(houseStore, [
       "CLEAR_SIDO_LIST",
@@ -209,9 +289,33 @@ export default {
         level: 6,
       };
       this.map = new kakao.maps.Map(container, options); //맵 만들기
-      // this.geocoder = new kakao.maps.services.Geocoder(); //geocoder 설정
+      kakao.maps.event.addListener(this.map, "dragend", () => {
+        // 지도 중심좌표를 얻어옵니다
+        let pos = this.map.getCenter();
+        let latlng = {
+          lat: pos.getLat(),
+          lng: pos.getLng(),
+        };
+        this.getRadius(latlng);
+      });
+      kakao.maps.event.addListener(this.map, "zoom_changed", () => {
+        let level = this.map.getLevel();
+        if (level >= 9 && this.subwayLevelFlag == false) {
+          for (let i = 0; i < this.subwayMarkers.length; i++) {
+            this.subwayMarkers[i].setMap(null);
+          }
+          this.subwayLevelFlag = true;
+        } else if (level < 9 && this.subwayLevelFlag == true) {
+          for (let i = 0; i < this.subwayMarkers.length; i++) {
+            this.subwayMarkers[i].setMap(this.map);
+          }
+          this.subwayLevelFlag = false;
+        }
+      });
+      //지하철
+      this.geocoder = new kakao.maps.services.Geocoder(); //geocoder 설정
+      this.getDefaultSubway();
     },
-
     /*
     addScript : 카카오맵 Script 추가를 위한 메소드
     */
@@ -227,7 +331,6 @@ export default {
         APPKEY;
       document.head.appendChild(script);
     },
-
     /*
     makeAptMarker : 기존에 사용했던 마커와 인포윈도우 삭제 후
     searchApt 에서 받아온 아파트 갯수만큼 마커와 인포윈도우, 목록 리스트 생성 후 이벤트 리스너 부착(마우스 오버,아웃,클릭)
@@ -283,6 +386,7 @@ export default {
           const len = this.overlays.length;
           for (let i = 0; i < len; i++) this.overlays[i].setMap(null);
           this.overlays = [];
+          document.getElementById("selectedApt_wrap").style.display = "none";
         });
         let event = this.makeDetailOverlayAndList(
           house[index],
@@ -306,25 +410,68 @@ export default {
         this.infowindows.push(this.infowindow);
       }
       listEl.appendChild(fragment);
-      this.map.setBounds(bounds);
-      let posi = this.map.getCenter();
-      this.cy = posi.getLat();
-      this.cx = posi.getLng();
+      if (this.boundFlag) {
+        this.map.setBounds(bounds);
+        this.boundFlag = false;
+      }
+
       this.showMarkers();
     },
     /*
     makePastAptList : 맵 우측에 현재 선택한 아파트의 과거부터의 거래기록 보여주기
     */
+    makeAptDetail() {
+      let dest = document.getElementById("aptDetail");
+      if (dest.hasChildNodes()) this.removeAllChildNods(dest);
+      let jibun = document.createElement("li");
+      jibun.innerText = this.sHouse.dongName + " " + this.sHouse.jibun;
+      let buildYear = document.createElement("li");
+      buildYear.innerText = this.sHouse.buildYear + "년 건축";
+      let area = document.createElement("li");
+      area.innerText = this.sHouse.area + "m² (" + this.sHouse.acreage + "평)";
+      dest.append(jibun);
+      dest.append(buildYear);
+      dest.append(area);
+    },
+
     makePastAptList() {
+      this.pastFlag = false;
+      this.aptFlag = false;
+      let pastList = document.createElement("div");
+      pastList.classList.add("selected-apt-pastlist");
+
       let listEl = document.getElementById("sAptList");
-      let fragment = document.createDocumentFragment();
-      this.removeAllChildNods(listEl);
+      if (listEl.hasChildNodes()) this.removeAllChildNods(listEl);
       let house = this.pastList;
       for (let index = 0; index < house.length; index++) {
-        let itemEl = this.getPastListItem(house[index]);
-        fragment.appendChild(itemEl);
+        let itemEl = document.createElement("tr");
+        let price = document.createElement("td");
+        price.classList.add("table-col");
+        let area = document.createElement("td");
+        area.classList.add("table-col");
+        let floor = document.createElement("td");
+        floor.classList.add("table-col");
+        let day = document.createElement("td");
+        day.classList.add("table-col");
+
+        price.innerText = this.priceToString(house[index].recentPrice);
+        day.innerText =
+          house[index].dealYear +
+          "-" +
+          house[index].dealMonth +
+          "-" +
+          house[index].dealDay;
+
+        floor.innerText = house[index].floor;
+        area.innerText =
+          house[index].area + "m² (" + house[index].acreage + "평)";
+        itemEl.append(price, day, floor, area);
+        itemEl.append(day);
+        itemEl.append(floor);
+        itemEl.append(area);
+        listEl.append(itemEl);
+        console.log(itemEl);
       }
-      listEl.appendChild(fragment);
     },
     /*
     showMarkers : 마커 보이기
@@ -389,7 +536,7 @@ export default {
       return el;
     },
     getPastListItem(places) {
-      let el = document.createElement("li");
+      let el = document.createElement("td");
       let itemStr = `
       <div class="info_list">
         <h6>거래금액 : ${this.priceToString(places.recentPrice)}</h6>
@@ -437,6 +584,13 @@ export default {
       kakao.maps.event.addListener(this.marker, "click", function() {
         let imgPath = require("@/assets/img/waiting.jpg");
         // let makeDetailDiv = self.makeDetailDiv(place);
+        let latlng = {
+          lat: place.lat,
+          lng: place.lng,
+        };
+        self.getSubwayList(latlng);
+        self.getBusList(latlng);
+        self.getBikeList(latlng);
         infowindow.close();
         let position = new kakao.maps.LatLng(place.lat, place.lng);
         self.map.panTo(position);
@@ -451,9 +605,9 @@ export default {
         makeDetail.appendChild(strong);
 
         makeDetail.innerHTML = place.aptName;
-        makeDetail.onclick = function() {
-          self.makeDetailDiv(place);
-        };
+        // makeDetail.onclick = function() {
+        //   self.makeDetailDiv(place);
+        // };
         content.appendChild(makeDetail);
         let div = document.createElement("div");
         div.classList.add("desc");
@@ -471,8 +625,10 @@ export default {
         span.appendChild(document.createElement("br"));
         span.append(place.buildYear + "년 건축");
         span.appendChild(document.createElement("br"));
-        div.appendChild(img);
-        div.appendChild(span);
+        let img1 = document.createElement("img");
+        img1.src = imgPath;
+        div.append(img1);
+        div.append(span);
         content.appendChild(div);
 
         overlay = new kakao.maps.CustomOverlay({
@@ -486,7 +642,16 @@ export default {
         overlay.setContent(content);
         overlay.setMap(map);
         self.getPastAptList(place.aptCode);
-        // this.panTo(place.lat, place.lng);
+        document.getElementById("selectedApt_wrap").style.display = "block";
+        self.sHouse = place;
+        self.makeAptDetail();
+        self.sHouse.recentPrice = price;
+        let title = document.getElementById("aptDetail_title");
+        title.innerText = self.sHouse.aptName;
+
+        let detailImg = document.getElementById("img_section");
+        if (detailImg.hasChildNodes()) self.removeAllChildNods(detailImg);
+        detailImg.append(img);
       });
     },
     makeDetailDiv(place) {
@@ -508,11 +673,6 @@ export default {
         lng: place.lng,
       };
 
-      // img.src = place.img;
-      // if (!place.img || place.img == "")
-
-      // let transportScore =
-
       this.getSubwayList(latlng);
       this.getBusList(latlng);
       this.getBikeList(latlng);
@@ -522,24 +682,135 @@ export default {
     },
     displaySubway() {
       this.transScore += 15 * this.subways.length;
+      this.subLen = this.subways.length;
+      this.chartData.datasets[0].data[0] = 15 * this.subLen;
     },
     displayBus() {
       this.transScore += 3 * this.buses.length;
+      this.busLen = this.buses.length;
+      this.chartData.datasets[0].data[1] = 3 * this.busLen;
     },
     displayBike() {
       this.transScore += this.bikes.length;
+      this.bikeLen = this.bikes.length;
+      this.chartData.datasets[0].data[2] = this.bikeLen;
     },
-    closeDetail() {
-      let el = document.getElementById("detail");
-      // let title = document.getElementById("detail_title");
-      let img = document.getElementById("detail-img-section");
-      let apt = document.getElementById("detail-apt-section");
-      let trans = document.getElementById("detail-trans-section");
-      this.transScore = 0;
-      el.style.display = "none";
-      let target = [img, apt, trans];
-      for (let i = 0; i < target.length; i++)
-        this.removeAllChildNods(target[i]);
+    displayTotalSubway() {
+      let index = new Map([
+        [
+          "1호선",
+          "https://user-images.githubusercontent.com/63468607/142995043-c1f43c24-27b8-423d-8b08-1535fcb5fdc3.png",
+        ],
+        [
+          "2호선",
+          "https://user-images.githubusercontent.com/63468607/142995256-1bd1f6df-46bc-4aee-96b5-d55fd3c1d0d2.png",
+        ],
+        [
+          "3호선",
+          "https://user-images.githubusercontent.com/63468607/142995294-b8506834-aa4f-4c5d-aad1-2cfe31caad84.png",
+        ],
+        [
+          "4호선",
+          "https://user-images.githubusercontent.com/63468607/142995338-b5baa327-65fc-4516-bb89-9b2162d8053b.png",
+        ],
+        [
+          "5호선",
+          "https://user-images.githubusercontent.com/63468607/142995376-ad4a2b79-4623-4839-aab4-d23b9530476a.png",
+        ],
+        [
+          "6호선",
+          "https://user-images.githubusercontent.com/63468607/142995386-b157643b-1bc4-4a75-ab52-e6f5b7a1e9c4.png",
+        ],
+        [
+          "7호선",
+          "https://user-images.githubusercontent.com/63468607/142995388-76e5f81b-837e-482e-877c-08075517c12e.png",
+        ],
+        [
+          "8호선",
+          "https://user-images.githubusercontent.com/63468607/142995389-d2cca480-75cd-41b4-96a1-9144dfeaf962.png",
+        ],
+        [
+          "9호선",
+          "https://user-images.githubusercontent.com/63468607/142995391-6ed7292f-417b-4e34-adfd-2cfffb864cc4.png",
+        ],
+        [
+          "수인분당",
+          "https://user-images.githubusercontent.com/63468607/142995404-54a636e7-1eb2-4100-b46c-e7c716841843.png",
+        ],
+        [
+          "신분당선",
+          "https://user-images.githubusercontent.com/63468607/142995407-a2317cbd-dd72-47b8-b66d-768c5fa1899e.png",
+        ],
+        [
+          "경의중앙",
+          "https://user-images.githubusercontent.com/63468607/142995395-f20f3247-9573-4b9a-8339-0562a260403d.png",
+        ],
+        [
+          "공항철도",
+          "https://user-images.githubusercontent.com/63468607/142995403-ec119ee0-dac3-4975-b213-b955e8666609.png",
+        ],
+        [
+          "경춘",
+          "https://user-images.githubusercontent.com/63468607/142995399-b7c0f577-6027-4321-ba7f-6619af29d0fc.png",
+        ],
+        [
+          "경강",
+          "https://user-images.githubusercontent.com/63468607/142995394-0ee4e9d5-6535-4dee-ab40-4dba87f4cba9.png",
+        ],
+        [
+          "우이신설",
+          "https://user-images.githubusercontent.com/63468607/142995408-9e036abe-73ed-499f-b718-f76a4af7441d.png",
+        ],
+      ]);
+      for (let i = 0; i < this.dSubways.length; i++) {
+        let subway = this.dSubways[i];
+        let path = index.get(subway.train);
+
+        let icon = new kakao.maps.MarkerImage(
+          path,
+          new kakao.maps.Size(20, 20),
+          { offset: new kakao.maps.Point(10, 20) }
+        );
+        let marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(subway.lat, subway.lng),
+          image: icon,
+        });
+        marker.setMap(this.map);
+        //TODO 지하철역 반경 검색 추가해야됨
+        //TODO 지하철역 마우스오버 추가해야됨
+
+        this.subwayMarkers.push(marker);
+      }
+    },
+    searchDetailAddrFromCoords(coords, callback) {
+      // 좌표로 법정동 상세 주소 정보를 요청합니다
+      this.geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+    },
+    searchAddrFromCoords(coords, callback) {
+      // 좌표로 행정동 주소 정보를 요청합니다
+      this.geocoder.coord2RegionCode(
+        coords.getLng(),
+        coords.getLat(),
+        callback
+      );
+    },
+    toglePast() {
+      if (!this.pastFlag) {
+        // document.getElementById("sAptList").style.display = "block";
+        this.pastFlag = !this.pastFlag;
+      } else {
+        // document.getElementById("sAptList").style.display = "none";
+        this.pastFlag = !this.pastFlag;
+      }
+    },
+    togleApt() {
+      if (!this.aptFlag) {
+        document.getElementById("aptDetail").style.display = "block";
+        this.aptFlag = !this.aptFlag;
+      } else {
+        document.getElementById("aptDetail").style.display = "none";
+        this.aptFlag = !this.aptFlag;
+      }
     },
   },
 };
@@ -909,13 +1180,13 @@ document.addEventListener("DOMContentLoaded", function() {});
 #selectedApt_wrap {
   position: absolute;
   top: 0;
-  right: 40px;
+  right: 2%;
   bottom: 0;
-  width: 250px;
-  margin: 10px 0 30px 10px;
+  width: 16%;
+  /* margin: 10px 0 30px 0px; */
   padding: 5px;
   overflow-y: auto;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(245, 245, 245, 0.89);
   z-index: 1;
   /* font-size: 12px; */
   border-radius: 10px;
@@ -931,7 +1202,7 @@ document.addEventListener("DOMContentLoaded", function() {});
   border-bottom: 1px solid #888;
   overflow: hidden;
   cursor: pointer;
-  min-height: 65px;
+  /* min-height: 65px; */
 }
 #placesList .item span {
   display: block;
@@ -956,31 +1227,6 @@ document.addEventListener("DOMContentLoaded", function() {});
   padding-left: 26px;
   background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png")
     no-repeat;
-}
-#sAptList li {
-  list-style: none;
-}
-#sAptList .item {
-  position: relative;
-  border-bottom: 1px solid #888;
-  overflow: hidden;
-  cursor: pointer;
-  min-height: 65px;
-}
-#sAptList .item span {
-  display: block;
-  margin-top: 4px;
-}
-#sAptList .item h6,
-#sAptList .item .info_list {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-#sAptList .item .info_list {
-  padding: 0;
-  margin: 5px 0;
-  font-size: 14px;
 }
 
 /* */
@@ -1014,41 +1260,6 @@ document.addEventListener("DOMContentLoaded", function() {});
   background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
 }
 
-#detail-img-section {
-  position: absolute;
-  border: black solid;
-  left: 15%;
-  top: 15%;
-  width: 180px;
-  height: 180px;
-}
-
-#detail-apt-section {
-  position: absolute;
-  border: black solid;
-  right: 8%;
-  top: 10%;
-  width: 40%;
-  height: 35%;
-  line-height: 70px;
-}
-#detail-apt-section li {
-  list-style: none;
-  font-size: 21px;
-  padding: auto;
-  text-align: center;
-  margin: 15px 15px 0px 0px;
-  /* overflow-y: auto; */
-}
-
-#detail-transport-section {
-  position: absolute;
-  border: black solid;
-  left: 8%;
-  top: 65%;
-  width: 25%;
-  height: 25%;
-}
 .logo {
   text-shadow: #000000;
   font-size: 48px;
@@ -1060,6 +1271,56 @@ document.addEventListener("DOMContentLoaded", function() {});
   left: 40px;
   top: 30px;
 }
+
+#img_section {
+  border: rgb(224, 224, 224) solid 1px;
+  width: 100%;
+  height: 15%;
+  border-radius: 5px;
+}
+#img_section img {
+  width: 100%;
+  height: 100%;
+}
+
+.accordion {
+  text-align: center;
+  background-color: white;
+  left: 10%;
+  width: 100%;
+  margin: 2% 0;
+  /* min-height: 5%; */
+  border-radius: 5px;
+  border: rgb(224, 224, 224) solid 1px;
+}
+
+.accordion table {
+  font-size: 7px;
+  text-align: center;
+}
+.table-col {
+  min-height: 50px;
+  overflow: hidden;
+}
+#record {
+  transition: max-height 0.2s ease-out;
+  font-size: 7px;
+  text-align: center;
+  text-align: center;
+  background-color: white;
+  left: 10%;
+  width: 100%;
+  margin: 2% 0;
+  /* min-height: 5%; */
+  border-radius: 5px;
+  border: rgb(224, 224, 224) solid 1px;
+}
+
+#aptDetail li {
+  list-style: none;
+  font-size: 13px;
+}
+
 /* .top {
   margin-top: 0px;
 } */
