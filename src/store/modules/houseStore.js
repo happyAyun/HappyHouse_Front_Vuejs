@@ -10,6 +10,7 @@ import {
   radius,
   defaultSubway,
 } from "@/api/house.js";
+import { school } from "../../api/house";
 
 const houseStore = {
   namespaced: true,
@@ -24,6 +25,7 @@ const houseStore = {
     buses: [],
     bikes: [],
     dSubways: [],
+    schools: [],
   },
 
   getters: {},
@@ -61,6 +63,9 @@ const houseStore = {
     },
     SET_DSUB_LIST: (state, dSubways) => {
       state.dSubways = dSubways;
+    },
+    SET_SCHOOL_LIST: (state, schools) => {
+      state.schools = schools;
     },
 
     CLEAR_SIDO_LIST: (state) => {
@@ -194,6 +199,17 @@ const houseStore = {
       defaultSubway(
         ({ data }) => {
           commit("SET_DSUB_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getSchool: ({ commit }, latlng) => {
+      school(
+        latlng,
+        ({ data }) => {
+          commit("SET_SCHOOL_LIST", data);
         },
         (error) => {
           console.log(error);
