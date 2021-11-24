@@ -91,9 +91,27 @@
             :busLen="busLen"
             :bikeLen="bikeLen"
           ></transport-chart>
-          <div></div>
+          <div id="transportInfo" class="arcodion-info">
+            <div id="transport-info-subway"></div>
+            <div id="transport-info-bus"></div>
+            <div id="transport-info-bike"></div>
+          </div>
           <button class="accordion">
-            <div></div>
+            근처 학교
+            <ul>
+              <li id="elementarySchool">
+                초등학교
+              </li>
+              <li id="middleSchool">
+                중학교
+              </li>
+              <li id="highSchool">
+                고등학교
+              </li>
+              <li id="otherSchool">
+                other
+              </li>
+            </ul>
           </button>
         </div>
       </div>
@@ -128,6 +146,10 @@ export default {
       bikeMarkers: [],
       bikeInfowindows: [],
       subwayMarkers: [],
+      elementarySchool: [],
+      middleSchool: [],
+      highSchool: [],
+      otherSchool: [],
       subwayInfowindow: null,
       inspectorFlag: false,
       cafeFlag: false,
@@ -186,6 +208,7 @@ export default {
       "buses",
       "bikes",
       "dSubways",
+      "schools",
     ]),
     centerPos: function() {
       if (this.map == null) return;
@@ -233,6 +256,9 @@ export default {
     subLen: function() {
       console.log("subLen 바뀜!!");
     },
+    schools: function() {
+      this.divideSchool();
+    },
   },
   methods: {
     ...mapActions(houseStore, [
@@ -246,6 +272,7 @@ export default {
       "getBikeList",
       "getRadius",
       "getDefaultSubway",
+      "getSchool",
     ]),
     ...mapMutations(houseStore, [
       "CLEAR_SIDO_LIST",
@@ -591,6 +618,7 @@ export default {
         self.getSubwayList(latlng);
         self.getBusList(latlng);
         self.getBikeList(latlng);
+        self.getSchool(latlng);
         infowindow.close();
         let position = new kakao.maps.LatLng(place.lat, place.lng);
         self.map.panTo(position);
@@ -684,16 +712,38 @@ export default {
       this.transScore += 15 * this.subways.length;
       this.subLen = this.subways.length;
       this.chartData.datasets[0].data[0] = 15 * this.subLen;
+      let el = document.getElementById("transport-info-subway");
+      if (el.hasChildNodes()) this.removeAllChildNods(el);
+      for (let subway of this.subways) {
+        let data = document.createElement("div");
+        data.innerText = `(${subway.train})${subway.station}`;
+        el.append(data);
+      }
     },
     displayBus() {
       this.transScore += 3 * this.buses.length;
       this.busLen = this.buses.length;
       this.chartData.datasets[0].data[1] = 3 * this.busLen;
+      let el = document.getElementById("transport-info-bus");
+      if (el.hasChildNodes()) this.removeAllChildNods(el);
+      for (let i = 0; i < 10; i++) {
+        if (this.busLen <= i) break;
+        let data = document.createElement("div");
+        data.innerText = `(${this.buses[i].ars})${this.buses[i].station}`;
+        el.append(data);
+      }
     },
     displayBike() {
       this.transScore += this.bikes.length;
       this.bikeLen = this.bikes.length;
       this.chartData.datasets[0].data[2] = this.bikeLen;
+      let el = document.getElementById("transport-info-bike");
+      if (el.hasChildNodes()) this.removeAllChildNods(el);
+      for (let bike of this.bikes) {
+        let data = document.createElement("div");
+        data.innerText = `(따릉이)${bike.place}`;
+        el.append(data);
+      }
     },
     displayTotalSubway() {
       let index = new Map([
@@ -810,6 +860,48 @@ export default {
       } else {
         document.getElementById("aptDetail").style.display = "none";
         this.aptFlag = !this.aptFlag;
+      }
+    },
+    divideSchool() {
+      this.elementarySchool = [];
+      this.middleSchool = [];
+      this.highSchool = [];
+      this.otherSchool = [];
+      for (let school of this.schools) {
+        // console.log(school);
+        if (school.school.includes("초등")) this.elementarySchool.push(school);
+        else if (school.school.includes("중학")) this.middleSchool.push(school);
+        else if (school.school.includes("고등")) this.highSchool.push(school);
+        else this.otherSchool.push(school);
+      }
+      // console.log(this.elementarySchool);
+      // console.log(this.middleSchool);
+      // console.log(this.highSchool);
+      // console.log(this.otherSchool);
+      this.displaySchool();
+    },
+    displaySchool() {
+      let elementary = document.getElementById("elementarySchool");
+      let middle = document.getElementById("middleSchool");
+      let high = document.getElementById("highSchool");
+      let other = document.getElementById("otherSchool");
+      let array = [elementary, middle, high, other];
+      for (let arr of array) this.removeAllChildNods(arr);
+
+      for (let i = 0; i < 5; i++) {
+        let ele = document.createElement("div");
+        let mid = document.createElement("div");
+        let hig = document.createElement("div");
+        let oth = document.createElement("div");
+        ele.innerText = `${this.elementarySchool[i].school} ${this.elementarySchool[i].distance}m`;
+        mid.innerText = `${this.middleSchool[i].school} ${this.middleSchool[i].distance}m`;
+        hig.innerText = `${this.highSchool[i].school} ${this.highSchool[i].distance}m`;
+        oth.innerText = `${this.otherSchool[i].school} ${this.otherSchool[i].distance}m`;
+
+        elementary.append(ele);
+        middle.append(mid);
+        high.append(hig);
+        other.append(oth);
       }
     },
   },
@@ -1300,7 +1392,7 @@ document.addEventListener("DOMContentLoaded", function() {});
 }
 .table-col {
   min-height: 50px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 #record {
   transition: max-height 0.2s ease-out;
@@ -1319,6 +1411,17 @@ document.addEventListener("DOMContentLoaded", function() {});
 #aptDetail li {
   list-style: none;
   font-size: 13px;
+}
+
+.arcodion-info {
+  text-align: center;
+  background-color: white;
+  left: 10%;
+  width: 100%;
+  margin: 2% 0;
+  /* min-height: 5%; */
+  border-radius: 5px;
+  border: rgb(224, 224, 224) solid 1px;
 }
 
 /* .top {

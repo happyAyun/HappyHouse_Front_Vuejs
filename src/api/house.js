@@ -77,6 +77,12 @@ function defaultSubway(success, fail) {
     .then(success)
     .catch(fail);
 }
+function school(params, success, fail) {
+  api
+    .get(`/map/school`, { params: params })
+    .then(success)
+    .catch(fail);
+}
 export {
   sidoList,
   gugunList,
@@ -89,4 +95,5 @@ export {
   bikeList,
   radius,
   defaultSubway,
+  school,
 };
