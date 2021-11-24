@@ -8,6 +8,9 @@ import Map from "../views/Map/Map.vue";
 import Member from "../views/user/Member.vue";
 import MyPage from "../views/user/MyPage.vue";
 import OauthMiddle from "../views/user/OauthMiddle.vue";
+import News from "../views/WebCraw/News.vue";
+
+import NewsList from "@/components/News/NewsList.vue";
 
 import MemberLogin from "@/components/user/MemberLogin.vue";
 import MemberJoin from "@/components/user/MemberJoin.vue";
@@ -48,6 +51,19 @@ const onlyAuthUser = async (to, from, next) => {
 };
 
 const routes = [
+  {
+    path: "/news",
+    name: "News",
+    redirect: "/news/list",
+    component: News,
+    children: [
+      {
+        path: "list",
+        name: "NewsList",
+        component: NewsList,
+      },
+    ],
+  },
   {
     path: "/kakao/auth",
     name: "OauthMiddle",

@@ -7,6 +7,9 @@
           <vs-button shadow color="black" href="#features" @click="toMap"
             >Map</vs-button
           >
+          <vs-button shadow color="black" href="#features" @click="toNews"
+            >News</vs-button
+          >
           <vs-button shadow color="black" href="#features" @click="toNotice"
             >Notice</vs-button
           >
@@ -126,12 +129,10 @@ export default {
     ...mapState(memberStore, ["isLogin", "isLoginError"]),
   },
   methods: {
-    ...mapActions(memberStore, [
-      "userConfirm",
-      "getUserInfo",
-      "logout",
-      //"kakaoOauth",
-    ]),
+    ...mapActions(memberStore, ["userConfirm", "getUserInfo", "logout"]),
+    toNews() {
+      this.$router.push({ name: "News" });
+    },
     toMap() {
       this.$router.push({ name: "Map" });
     },
