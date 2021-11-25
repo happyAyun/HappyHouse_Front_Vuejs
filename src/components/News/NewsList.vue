@@ -8,21 +8,23 @@
           >
         </b-col>
       </b-row>
-
-      <vue-good-table
-        :columns="columns"
-        :rows="rows"
-        @on-row-click="viewArticle"
-        :search-options="{
-          enabled: true,
-          placeholder: '검색어를 입력하세요',
-        }"
-        :pagination-options="{
-          enabled: true,
-          mode: 'pages',
-          perPage: 5,
-        }"
-      />
+      <div class="top2">
+        <vue-good-table
+          :columns="columns"
+          :rows="rows"
+          styleClass="vgt-table striped"
+          @on-row-click="viewArticle"
+          :search-options="{
+            enabled: true,
+            placeholder: '검색어를 입력하세요',
+          }"
+          :pagination-options="{
+            enabled: true,
+            mode: 'pages',
+            perPage: 10,
+          }"
+        />
+      </div>
     </b-container>
   </div>
 </template>
@@ -95,4 +97,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.top2 {
+  margin-top: 20px;
+}
+</style>

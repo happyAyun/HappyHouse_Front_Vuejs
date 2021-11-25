@@ -51,11 +51,9 @@
     </div>
     <div class="foot-col contact-form">
       <h3>관리자 정보</h3>
-      <a class="a-button" href="#">0110</a>
+      <a class="a-button" href="#">김승현</a>
       <br />
-      <a class="a-button" href="#">1254</a>
-      <br />
-      <a class="a-button" href="#">abhishek@gmail.com</a>
+      <a class="a-button" href="#">심아윤</a>
       <br />
       <p class="font-weight-100">
         홈페이지에 의견이 있으시다면 언제든지 연락주세요.

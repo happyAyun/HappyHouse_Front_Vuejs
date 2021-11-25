@@ -37,7 +37,12 @@
     <b-col class="text-left">
       <b-button variant="warning" @click="listArticle">목록</b-button>
     </b-col>
-    <div v-if="article.userid == this.userInfo.userid">
+    <div
+      v-if="
+        article.userid == this.userInfo.userid ||
+          'admin' == this.userInfo.userid
+      "
+    >
       <b-col class="text-right">
         <b-button pill variant="info" @click="moveModifyArticle">수정</b-button>
         <b-button pill variant="outline-danger" @click="deleteArticle"

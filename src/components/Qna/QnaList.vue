@@ -10,6 +10,7 @@
       <vue-good-table
         :columns="columns"
         :rows="rows"
+        styleClass="vgt-table striped"
         @on-row-click="viewArticle"
         :search-options="{
           enabled: true,
@@ -65,7 +66,7 @@ export default {
         },
         {
           label: "조회수",
-          field: "count",
+          field: "hit",
           type: "number",
         },
       ],

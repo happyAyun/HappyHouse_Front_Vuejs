@@ -33,7 +33,12 @@
       <b-col class="text-left">
         <b-button variant="warning" @click="listArticle">목록</b-button>
       </b-col>
-      <div v-if="this.userInfo.userid == article.userid">
+      <div
+        v-if="
+          this.userInfo.userid == article.userid ||
+            'admin' == this.userInfo.userid
+        "
+      >
         <b-col class="text-right">
           <b-button pill variant="info" @click="moveModifyArticle"
             >수정</b-button

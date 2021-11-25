@@ -8,21 +8,28 @@
           <td rowspan="2" class="tbreply">
             <h3>{{ Obj.content }}</h3>
           </td>
-          <td rowspan="2" class="tbd">
-            <h3>
-              <b-button
-                style="float: right;"
-                size="sm"
-                variant="primary"
-                @click="deleteReply"
-                >삭제</b-button
-              >
-            </h3>
-          </td>
+          <div
+            v-if="
+              this.userInfo.userid == Obj.userid ||
+                'admin' == this.userInfo.userid
+            "
+          >
+            <td rowspan="2" class="tbd">
+              <h3>
+                <b-button
+                  style="float: right;"
+                  size="sm"
+                  variant="primary"
+                  @click="deleteReply"
+                  >삭제</b-button
+                >
+              </h3>
+            </td>
+          </div>
         </tr>
         <tr>
           <td>{{ changeDateFormat }}</td>
-          <td>ㅇㄹㅇㄹㅇㄷ</td>
+          <td>{{ Obj.userid }}</td>
         </tr>
       </table>
     </div>
@@ -31,7 +38,11 @@
 
 <script>
 import { deleteReply } from "@/api/qnaReply.js";
+import { mapState } from "vuex";
 import moment from "moment";
+
+const memberStore = "memberStore";
+
 export default {
   name: "QnaReplyItem",
   props: {
@@ -39,6 +50,7 @@ export default {
   },
   created() {},
   computed: {
+    ...mapState(memberStore, ["userInfo"]),
     changeDateFormat() {
       return moment(new Date(this.Obj.regtime)).format("YYYY.MM.DD hh:mm:ss");
     },
@@ -73,7 +85,7 @@ export default {
 }
 .tbreply {
   width: 700px;
-  border: 1px solid grey;
+  border: 0px solid grey;
 }
 .comment-list-item {
   display: flex;

@@ -17,18 +17,25 @@
 
 <script>
 import { writeReply } from "@/api/qnaReply.js";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
+
 export default {
   name: "QnaReplyWrite",
   props: { articleno: Number },
   data() {
     return { name: null, context: null };
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   methods: {
     createComment() {
       writeReply(
         {
           articleno: this.articleno,
-          userid: "",
+          userid: this.userInfo.userid,
           content: this.context,
         },
         ({ data }) => {
