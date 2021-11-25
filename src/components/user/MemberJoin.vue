@@ -141,6 +141,7 @@ export default {
       } else {
         await this.joinUser(this.user);
         this.$router.replace({ name: "Home" });
+        this.checked = false;
       }
     },
   },
