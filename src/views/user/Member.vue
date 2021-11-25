@@ -4,12 +4,11 @@
       HappyHouse
     </div>
     <PritiNavbar />
-    <b-container class="bv-example-row mt-3 text-center">
-      <h3 class="top underline-steelblue">
-        <b-icon icon="person-lines-fill"></b-icon> Member Service
-      </h3>
-      <router-view></router-view>
-    </b-container>
+    <div class="top">
+      <b-container class="bv-example-row mt-3 text-center">
+        <router-view></router-view>
+      </b-container>
+    </div>
   </b-container>
 </template>
 
@@ -44,6 +43,6 @@ export default {
   top: 30px;
 }
 .top {
-  margin-top: 100px;
+  margin-top: 150px;
 }
 </style>

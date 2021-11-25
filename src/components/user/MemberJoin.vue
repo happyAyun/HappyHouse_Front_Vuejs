@@ -2,7 +2,7 @@
   <b-container class="bv-example-row mt-3">
     <b-row>
       <b-col>
-        <b-alert variant="secondary" show><h3>회원가입</h3></b-alert>
+        <b-alert show variant="primary"><h1>회원가입</h1></b-alert>
       </b-col>
     </b-row>
     <b-row>
@@ -62,20 +62,12 @@
                 placeholder="이메일 입력...."
               ></b-form-input>
             </b-form-group>
-            <b-button
-              type="button"
-              variant="primary"
-              class="m-1"
-              @click="enterJoin"
-              >회원가입</b-button
-            >
-            <b-button
-              type="button"
-              variant="success"
-              class="m-1"
-              @click="movePage"
-              >초기화</b-button
-            >
+            <div class="joinBtn">
+              <b-button pill @click="enterJoin">회원가입</b-button>
+              <b-button pill variant="outline-danger" @click="movePage"
+                >홈으로</b-button
+              >
+            </div>
           </b-form>
         </b-card>
       </b-col>
@@ -108,6 +100,9 @@ export default {
   },
   methods: {
     ...mapActions(memberStore, ["idChecking", "joinUser", "kakaoLogin"]),
+    movePage() {
+      this.$router.replace({ name: "Home" });
+    },
     async getToken() {
       await this.kakaoLogin(this.code);
       let token = sessionStorage.getItem("access-token");
@@ -152,4 +147,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.joinBtn {
+  margin-left: 220px;
+}
+</style>
