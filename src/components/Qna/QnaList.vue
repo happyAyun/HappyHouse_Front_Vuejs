@@ -25,9 +25,11 @@
       <div class="under">
         <b-row class="mb-1">
           <b-col class="text-right">
-            <b-button pill variant="outline-success" @click="moveWrite()"
-              >글쓰기</b-button
-            >
+            <div v-if="!isNull">
+              <b-button pill variant="outline-success" @click="moveWrite()"
+                >글쓰기</b-button
+              >
+            </div>
           </b-col>
         </b-row>
       </div>
@@ -38,7 +40,9 @@
 import { listArticle } from "@/api/qna";
 import "vue-good-table/dist/vue-good-table.css";
 import { VueGoodTable } from "vue-good-table";
+import { mapState } from "vuex";
 
+const memberStore = "memberStore";
 export default {
   name: "QnaList",
   components: {
@@ -46,6 +50,7 @@ export default {
   },
   data() {
     return {
+      isNull: "",
       columns: [
         {
           label: "글번호",
@@ -73,8 +78,12 @@ export default {
       rows: [],
     };
   },
-  computed: {},
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   created() {
+    this.isEmpty(this.userInfo);
+
     listArticle(
       (response) => {
         this.rows = response.data;
@@ -85,6 +94,20 @@ export default {
     );
   },
   methods: {
+    isEmpty(value) {
+      if (
+        value == "" ||
+        value == null ||
+        value == undefined ||
+        (value != null &&
+          typeof value == "object" &&
+          !Object.keys(value).length)
+      ) {
+        this.isNull = true;
+      } else {
+        this.isNull = false;
+      }
+    },
     moveWrite() {
       this.$router.push({ name: "QnaWrite" });
     },

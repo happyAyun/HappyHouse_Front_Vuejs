@@ -140,7 +140,7 @@ export default {
         return;
       } else {
         await this.joinUser(this.user);
-        this.$router.replace({ name: "SignIn" });
+        this.$router.replace({ name: "Home" });
       }
     },
   },

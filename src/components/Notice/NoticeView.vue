@@ -96,7 +96,7 @@ export default {
       //   this.$router.push({ path: `/board/modify/${this.article.articleno}` });
     },
     deleteArticle() {
-      if (confirm("정말로 삭제?")) {
+      if (confirm("정말로 삭제하시겠습니까?")) {
         deleteArticle(this.article.articleno, () => {
           this.$router.push({ name: "NoticeList" });
         });
