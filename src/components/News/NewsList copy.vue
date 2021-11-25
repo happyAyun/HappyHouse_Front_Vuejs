@@ -69,8 +69,7 @@ export default {
           // let url = this.itemList[i].link;
           // console.log(url);
           let item = {
-            no: i + 1,
-            title: this.itemList[i].title,
+            "어제와 오늘의 기사 제목": this.itemList[i].title,
           };
           console.log(item);
           console.log(typeof item);
@@ -87,9 +86,7 @@ export default {
   },
   methods: {
     viewArticle(row) {
-      console.log(row.row.no);
-      // window.location.replace(this.itemList[row.row.no - 1].link);
-      window.open(this.itemList[row.row.no - 1].link);
+      window.location.replace(this.itemList[row.no].link);
     },
   },
 };
