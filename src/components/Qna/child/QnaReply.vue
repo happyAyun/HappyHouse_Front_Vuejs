@@ -4,7 +4,7 @@
     <div :key="item.id" v-for="item in replies">
       <QnaReplyItem :Obj="item"></QnaReplyItem>
     </div>
-    <div v-if="replies.length == 0">
+    <div v-if="replies.length == 0 && this.userInfo.userid == 'admin'">
       <qna-reply-write :articleno="articleno" />
     </div>
   </div>
@@ -14,6 +14,9 @@
 import { listReply } from "@/api/qnaReply.js";
 import QnaReplyWrite from "./QnaReplyWrite.vue";
 import QnaReplyItem from "./QnaReplyItem.vue";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "QnaReply",
@@ -23,13 +26,31 @@ export default {
   components: { QnaReplyWrite, QnaReplyItem },
   data() {
     return {
+      isNull: "",
       dismissSecs: 10,
       dismissCountDown: 0,
       showDismissibleAlert: false,
       replies: [],
     };
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   methods: {
+    isEmpty(value) {
+      if (
+        value == "" ||
+        value == null ||
+        value == undefined ||
+        (value != null &&
+          typeof value == "object" &&
+          !Object.keys(value).length)
+      ) {
+        this.isNull = true;
+      } else {
+        this.isNull = false;
+      }
+    },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
@@ -38,6 +59,8 @@ export default {
     },
   },
   created() {
+    this.isEmpty(this.userInfo);
+
     listReply(
       this.$route.params.articleno,
       ({ data }) => {
