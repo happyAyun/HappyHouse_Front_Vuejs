@@ -83,6 +83,18 @@ function school(params, success, fail) {
     .then(success)
     .catch(fail);
 }
+function cafe(params, success, fail) {
+  api
+    .get(`/map/cafe`, { params: params })
+    .then(success)
+    .catch(fail);
+}
+function burger(params, success, fail) {
+  api
+    .get(`/map/burger`, { params: params })
+    .then(success)
+    .catch(fail);
+}
 export {
   sidoList,
   gugunList,
@@ -96,4 +108,6 @@ export {
   radius,
   defaultSubway,
   school,
+  cafe,
+  burger,
 };

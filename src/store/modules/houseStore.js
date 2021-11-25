@@ -9,8 +9,10 @@ import {
   bikeList,
   radius,
   defaultSubway,
+  school,
+  cafe,
+  burger,
 } from "@/api/house.js";
-import { school } from "../../api/house";
 
 const houseStore = {
   namespaced: true,
@@ -24,6 +26,8 @@ const houseStore = {
     subways: [],
     buses: [],
     bikes: [],
+    cafes: [],
+    burgers: [],
     dSubways: [],
     schools: [],
   },
@@ -67,7 +71,12 @@ const houseStore = {
     SET_SCHOOL_LIST: (state, schools) => {
       state.schools = schools;
     },
-
+    SET_CAFE_LIST: (state, cafes) => {
+      state.cafes = cafes;
+    },
+    SET_BURGER_LIST: (state, burgers) => {
+      state.burgers = burgers;
+    },
     CLEAR_SIDO_LIST: (state) => {
       state.sidos = [{ value: null, text: "선택하세요" }];
     },
@@ -210,6 +219,28 @@ const houseStore = {
         latlng,
         ({ data }) => {
           commit("SET_SCHOOL_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getCafe: ({ commit }, latlng) => {
+      cafe(
+        latlng,
+        ({ data }) => {
+          commit("SET_CAFE_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getBurger: ({ commit }, latlng) => {
+      burger(
+        latlng,
+        ({ data }) => {
+          commit("SET_BURGER_LIST", data);
         },
         (error) => {
           console.log(error);

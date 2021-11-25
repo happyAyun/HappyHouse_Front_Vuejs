@@ -15,6 +15,15 @@ import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import memberStore from "./store/modules/memberStore";
+
+import Vue from "vue";
+
+import "beautify-scrollbar/dist/index.css";
+import "v2-table/dist/index.css";
+import V2Table from "v2-table";
+
+Vue.use(V2Table);
+
 Vue.use(VueGoodTablePlugin);
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);

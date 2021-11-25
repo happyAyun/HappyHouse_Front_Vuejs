@@ -4,18 +4,23 @@
       HappyHouse
     </div>
     <PritiNavbar />
+    <!-- <img
+      src="https://user-images.githubusercontent.com/63468607/143296874-52cd9c53-441c-4d4b-b3d6-517f10e796e8.png"
+      alt=""
+    /> -->
     <div id="all" class="top">
+      <!-- <div class="btn-group">
+        <button type="button" class="btn btn-primary" id="inspectorSearch">
+          선별 진료소
+        </button>
+        <button type="button" class="btn btn-primary" id="bikeSearch">
+          따릉이 보관소
+        </button>
+        <button type="button" class="btn btn-primary" id="shopSearch">
+          카페
+        </button>
+      </div> -->
       <b-row class="mt-4 mb-4 text-center">
-        <!-- <b-col class="sm-3">
-      <b-form-input
-        v-model.trim="dongCode"
-        placeholder="동코드 입력...(예 : 11110)"
-        @keypress.enter="sendKeyword"
-      ></b-form-input>
-    </b-col>
-    <b-col class="sm-3" align="left">
-      <b-button variant="outline-primary" @click="sendKeyword">검색</b-button>
-    </b-col> -->
         <b-col class="sm-3">
           <b-form-select
             v-model="sidoCode"
@@ -38,26 +43,40 @@
           ></b-form-select>
         </b-col>
       </b-row>
-
-      <!-- <div class="btn-group">
-        <button type="button" class="btn btn-primary" id="inspectorSearch">
-          선별 진료소
-        </button>
-        <button type="button" class="btn btn-primary" id="bikeSearch">
-          따릉이 보관소
-        </button>
-        <button type="button" class="btn btn-primary" id="shopSearch">
-          카페
-        </button>
-      </div> -->
       <div id="result"></div>
       <div class="map_wrap">
+        <div id="imagebox_wrap">
+          <!-- <img
+            src="https://user-images.githubusercontent.com/63468607/143327829-7371b76c-3c7f-4cc2-918c-dd2548eabfbb.png"
+            alt=""
+            id="imgBus"
+            @click="this.busToggle"
+          /> -->
+          <img
+            src="https://user-images.githubusercontent.com/63468607/143382324-0120b078-eceb-40b2-8273-220e74240d79.png"
+            alt=""
+            id="imgBike"
+            @click="this.bikeToggle"
+          />
+          <img
+            src="https://user-images.githubusercontent.com/63468607/143381909-726252d8-4b25-48e5-aaeb-6f548a3be397.png"
+            alt=""
+            id="imgCafe"
+            @click="this.cafeToggle"
+          />
+          <img
+            src="https://user-images.githubusercontent.com/63468607/143374108-de810eac-4235-4252-b2a9-b5e000c1dc25.png"
+            alt=""
+            id="imgBurger"
+            @click="this.burgerToggle"
+          />
+        </div>
         <div
           id="map"
           style="width:98%;height:900px; position: relative; overflow:hidden; margin-left:15px;"
         ></div>
-        <div id="menu_wrap" class="bg_white" style="display:none;">
-          <ul id="placesList"></ul>
+        <div id="image-toggle">
+          <img src="" alt="" />
         </div>
         <div id="selectedApt_wrap" class="bg_white" style="display:none">
           <div id="img_section"></div>
@@ -67,52 +86,146 @@
           </button>
           <button class="accordion">
             <div>거래기록</div>
-            <table>
-              <colgroup>
-                <col width="30%" />
-                <col width="29%" />
-                <col width="8%" />
-                <col width="35%" />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th class="table-col">거래금액</th>
-                  <th class="table-col">거래일</th>
-                  <th class="table-col">층 수</th>
-                  <th class="table-col">실주거공간</th>
-                </tr>
-              </thead>
-              <tbody id="sAptList"></tbody>
-            </table>
+            <div id="deallist-table">
+              <v2-table :data="pastList" height="300" :lazy-load="true">
+                <v2-table-column
+                  label="거래금액(만원)"
+                  prop="recentPrice"
+                  width="100"
+                ></v2-table-column>
+                <v2-table-column
+                  label="년"
+                  prop="dealYear"
+                  width="30"
+                ></v2-table-column>
+                <v2-table-column
+                  label="월"
+                  prop="dealMonth"
+                  width="30"
+                ></v2-table-column>
+                <v2-table-column
+                  label="일"
+                  prop="dealDay"
+                  width="30"
+                ></v2-table-column>
+                <v2-table-column
+                  label="층"
+                  prop="floor"
+                  width="30"
+                ></v2-table-column>
+                <v2-table-column
+                  label="면적(m²)"
+                  prop="area"
+                  width="50"
+                ></v2-table-column>
+              </v2-table>
+            </div>
           </button>
-          <div style="text-align:center">근처 교통</div>
+          <div style="text-align:center">교통 분석</div>
           <transport-chart
             :subLen="subLen"
             :busLen="busLen"
             :bikeLen="bikeLen"
           ></transport-chart>
-          <div id="transportInfo" class="arcodion-info">
-            <div id="transport-info-subway"></div>
-            <div id="transport-info-bus"></div>
-            <div id="transport-info-bike"></div>
-          </div>
-          <button class="accordion">
-            근처 학교
-            <ul>
-              <li id="elementarySchool">
-                초등학교
-              </li>
-              <li id="middleSchool">
-                중학교
-              </li>
-              <li id="highSchool">
-                고등학교
-              </li>
-              <li id="otherSchool">
-                other
-              </li>
-            </ul>
-          </button>
+          <b-tabs fill style="text-align:center" class="arcodion-info">
+            <b-tab title="지하철" active>
+              <v2-table :data="subways" height="150" :lazy-load="true">
+                <v2-table-column
+                  label="노선"
+                  prop="train"
+                  width="150"
+                ></v2-table-column>
+                <v2-table-column
+                  label="역 명"
+                  prop="station"
+                  width="150"
+                ></v2-table-column>
+              </v2-table>
+            </b-tab>
+            <b-tab title="버스">
+              <v2-table :data="buses" height="150" :lazy-load="true">
+                <v2-table-column
+                  label="정류소번호"
+                  prop="ars"
+                  width="90"
+                ></v2-table-column>
+                <v2-table-column
+                  label="역 명"
+                  prop="station"
+                  width="180"
+                ></v2-table-column>
+              </v2-table>
+            </b-tab>
+            <b-tab title="따릉이">
+              <v2-table :data="bikes" height="150" :lazy-load="true">
+                <v2-table-column
+                  label="위치"
+                  prop="place"
+                  width="150"
+                ></v2-table-column>
+                <v2-table-column
+                  label="타입"
+                  prop="btype"
+                  width="150"
+                ></v2-table-column>
+              </v2-table>
+            </b-tab>
+          </b-tabs>
+          <b-tabs fill style="text-align:center" class="arcodion-info">
+            <b-tab title="초등학교" active id="elementarySchool">
+              <v2-table :data="elementarySchool" height="300" :lazy-load="true">
+                <v2-table-column
+                  label="이름"
+                  prop="school"
+                  width="150"
+                ></v2-table-column>
+                <v2-table-column
+                  label="거리(m)"
+                  prop="distance"
+                  width="150"
+                ></v2-table-column>
+              </v2-table>
+            </b-tab>
+            <b-tab title="중학교" id="middleSchool"
+              ><v2-table :data="middleSchool" height="300" :lazy-load="true">
+                <v2-table-column
+                  label="이름"
+                  prop="school"
+                  width="150"
+                ></v2-table-column>
+                <v2-table-column
+                  label="거리(m)"
+                  prop="distance"
+                  width="150"
+                ></v2-table-column> </v2-table
+            ></b-tab>
+            <b-tab title="고등학교" id="highSchool"
+              ><v2-table :data="highSchool" height="300" :lazy-load="true">
+                <v2-table-column
+                  label="이름"
+                  prop="school"
+                  width="150"
+                ></v2-table-column>
+                <v2-table-column
+                  label="거리(m)"
+                  prop="distance"
+                  width="150"
+                ></v2-table-column> </v2-table
+            ></b-tab>
+            <b-tab title="특수학교" id="otherSchool"
+              ><v2-table :data="otherSchool" height="300" :lazy-load="true">
+                <v2-table-column
+                  label="이름"
+                  prop="school"
+                  width="150"
+                ></v2-table-column>
+                <v2-table-column
+                  label="거리(m)"
+                  prop="distance"
+                  width="150"
+                ></v2-table-column> </v2-table
+            ></b-tab>
+          </b-tabs>
         </div>
       </div>
     </div>
@@ -140,16 +253,16 @@ export default {
       infowindow: null,
       infowindows: [],
       cafeMarkers: [],
-      cafeInfowindows: [],
-      coronaMarkers: [],
-      coronaInfowindows: [],
       bikeMarkers: [],
-      bikeInfowindows: [],
+      busMarkers: [],
+      burgerMarkers: [],
+
       subwayMarkers: [],
       elementarySchool: [],
       middleSchool: [],
       highSchool: [],
       otherSchool: [],
+      dealList: [],
       subwayInfowindow: null,
       inspectorFlag: false,
       cafeFlag: false,
@@ -169,6 +282,12 @@ export default {
       boundFlag: false,
       subwayLevelFlag: false,
       limit: 5,
+
+      busImgToggle: false,
+      bikeImgToggle: false,
+      burgerImgToggle: false,
+      cafeImgToggle: false,
+
       chartData: {
         labels: ["지하철", "버스", "따릉이"],
         datasets: [
@@ -178,20 +297,7 @@ export default {
           },
         ],
       },
-      // chartOptions: {
-      //   rsponsive: true,
-      //   aspectRatio: 1.19,
-      //   legend: {
-      //     display: false, // 차트 내 범례 디스플레이 비활성화
-      //   },
-      //   scales: {
-      //     xAxes: this.xAxes, // x축 세부 설정, 별도 getter로 분리
-      //     yAxes: this.yAxes, // y축 세부 설정, 별도 getter로 분리
-      //   },
-      //   animation: {
-      //     duration: 0, // 트랜지션 효과 비활성화
-      //   },
-      // },
+
       sidoCode: null,
       gugunCode: null,
       dongCode: null,
@@ -207,24 +313,13 @@ export default {
       "subways",
       "buses",
       "bikes",
+      "cafes",
+      "burgers",
       "dSubways",
       "schools",
     ]),
-    centerPos: function() {
-      if (this.map == null) return;
-      let latlng = this.map.getCenter();
-      // let el = document.getElementById("result");
-      // el.innerText = [latlng.getLat(), latlng.getLng()];
-      return [latlng.getLat(), latlng.getLng()];
-    },
-
-    // sidos() {
-    //   return this.$store.state.sidos;
-    // },
   },
   created() {
-    // this.$store.dispatch("getSido");
-    // this.sidoList();
     this.CLEAR_SIDO_LIST();
     this.getSido();
   },
@@ -235,9 +330,6 @@ export default {
     houses: function() {
       this.makeAptMarker();
     },
-    pastList: function() {
-      this.makePastAptList();
-    },
     subways: function() {
       this.displaySubway();
     },
@@ -246,6 +338,12 @@ export default {
     },
     bikes: function() {
       this.displayBike();
+    },
+    cafes: function() {
+      this.makeCafeMarkers();
+    },
+    burgers: function() {
+      this.makeBurgerMarkers();
     },
     dongCode: function() {
       this.boundFlag = true;
@@ -258,6 +356,49 @@ export default {
     },
     schools: function() {
       this.divideSchool();
+    },
+    bikeFlag: function() {
+      this.togleBike();
+    },
+    busImgToggle: function() {
+      if (this.busImgToggle) {
+        this.getBusList();
+      } else {
+        for (let i = 0; i < this.busMarkers.length; i++) {
+          this.busMarkers[i].setMap(null);
+        }
+        this.busMarkers = [];
+      }
+    },
+    bikeImgToggle: function() {
+      if (this.bikeImgToggle) {
+        this.getBikeList();
+      } else {
+        for (let i = 0; i < this.bikeMarkers.length; i++) {
+          this.bikeMarkers[i].setMap(null);
+        }
+        this.bikeMarkers = [];
+      }
+    },
+    burgerImgToggle: function() {
+      if (this.burgerImgToggle) {
+        this.getBurger();
+      } else {
+        for (let i = 0; i < this.burgerMarkers.length; i++) {
+          this.burgerMarkers[i].setMap(null);
+        }
+        this.burgerMarkers = [];
+      }
+    },
+    cafeImgToggle: function() {
+      if (this.cafeImgToggle) {
+        this.getCafe();
+      } else {
+        for (let i = 0; i < this.cafeMarkers.length; i++) {
+          this.cafeMarkers[i].setMap(null);
+        }
+        this.cafeMarkers = [];
+      }
     },
   },
   methods: {
@@ -273,6 +414,8 @@ export default {
       "getRadius",
       "getDefaultSubway",
       "getSchool",
+      "getCafe",
+      "getBurger",
     ]),
     ...mapMutations(houseStore, [
       "CLEAR_SIDO_LIST",
@@ -317,15 +460,21 @@ export default {
       };
       this.map = new kakao.maps.Map(container, options); //맵 만들기
       kakao.maps.event.addListener(this.map, "dragend", () => {
+        //드래그시 발생시킬 이벤트 등록
         // 지도 중심좌표를 얻어옵니다
         let pos = this.map.getCenter();
         let latlng = {
           lat: pos.getLat(),
           lng: pos.getLng(),
         };
-        this.getRadius(latlng);
+        this.getRadius(latlng); //드래그가 끝나면 중심좌표를 기준으로 아파트를 얻어옵니다.
+        if (this.bikeImgToggle) this.getBikeList(latlng);
+        if (this.busImgToggle) this.getBusList(latlng);
+        if (this.burgerImgToggle) this.getBurger(latlng);
+        if (this.cafeImgToggle) this.getCafe(latlng);
       });
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
+        //맵의 줌을 확대,축소 시 발생시킬 이벤트 등록
         let level = this.map.getLevel();
         if (level >= 9 && this.subwayLevelFlag == false) {
           for (let i = 0; i < this.subwayMarkers.length; i++) {
@@ -339,10 +488,10 @@ export default {
           this.subwayLevelFlag = false;
         }
       });
-      //지하철
       this.geocoder = new kakao.maps.services.Geocoder(); //geocoder 설정
-      this.getDefaultSubway();
+      this.getDefaultSubway(); //맵 전체에 지하철 정보를 얻어옵니다.
     },
+
     /*
     addScript : 카카오맵 Script 추가를 위한 메소드
     */
@@ -369,24 +518,32 @@ export default {
       }
       this.markers = [];
       this.infowindows = [];
-      let listEl = document.getElementById("placesList");
+      //기존 마커와 인포윈도우 삭제
+
       let fragment = document.createDocumentFragment();
       let bounds = new kakao.maps.LatLngBounds();
       let house = this.houses;
-      this.removeAllChildNods(listEl);
+      let path =
+        "https://user-images.githubusercontent.com/63468607/143381202-5a6d054c-211d-4f35-9689-9c7eeda7182b.png";
       for (let index = 0; index < house.length; index++) {
         let tmpLat = house[index].lat;
         let tmpLng = house[index].lng;
         let tmpName = house[index].aptName;
         let tmpPrice = this.priceToString(house[index].recentPrice);
-        // let tmpYear = house[index].buildYear;
-        // let floor = house[index].floor;
         let coords = new kakao.maps.LatLng(tmpLat, tmpLng);
         bounds.extend(coords);
+
+        let icon = new kakao.maps.MarkerImage(
+          path,
+          new kakao.maps.Size(30, 30),
+          { offset: new kakao.maps.Point(15, 30) }
+        );
         this.marker = new kakao.maps.Marker({
           position: coords,
+          image: icon,
           clickable: true,
         });
+
         this.infowindow = new kakao.maps.InfoWindow({
           content:
             '<div class="infoFont" style="width:300px;text-align:center;padding:6px 0;">' +
@@ -436,7 +593,6 @@ export default {
         itemEl.onclick = this.markers.push(this.marker);
         this.infowindows.push(this.infowindow);
       }
-      listEl.appendChild(fragment);
       if (this.boundFlag) {
         this.map.setBounds(bounds);
         this.boundFlag = false;
@@ -461,45 +617,6 @@ export default {
       dest.append(area);
     },
 
-    makePastAptList() {
-      this.pastFlag = false;
-      this.aptFlag = false;
-      let pastList = document.createElement("div");
-      pastList.classList.add("selected-apt-pastlist");
-
-      let listEl = document.getElementById("sAptList");
-      if (listEl.hasChildNodes()) this.removeAllChildNods(listEl);
-      let house = this.pastList;
-      for (let index = 0; index < house.length; index++) {
-        let itemEl = document.createElement("tr");
-        let price = document.createElement("td");
-        price.classList.add("table-col");
-        let area = document.createElement("td");
-        area.classList.add("table-col");
-        let floor = document.createElement("td");
-        floor.classList.add("table-col");
-        let day = document.createElement("td");
-        day.classList.add("table-col");
-
-        price.innerText = this.priceToString(house[index].recentPrice);
-        day.innerText =
-          house[index].dealYear +
-          "-" +
-          house[index].dealMonth +
-          "-" +
-          house[index].dealDay;
-
-        floor.innerText = house[index].floor;
-        area.innerText =
-          house[index].area + "m² (" + house[index].acreage + "평)";
-        itemEl.append(price, day, floor, area);
-        itemEl.append(day);
-        itemEl.append(floor);
-        itemEl.append(area);
-        listEl.append(itemEl);
-        console.log(itemEl);
-      }
-    },
     /*
     showMarkers : 마커 보이기
     */
@@ -609,7 +726,7 @@ export default {
     */
     makeDetailOverlayAndList(place, overlay, map, price, infowindow, self) {
       kakao.maps.event.addListener(this.marker, "click", function() {
-        let imgPath = require("@/assets/img/waiting.jpg");
+        let imgPath = require("@/assets/img/apart.jpg");
         // let makeDetailDiv = self.makeDetailDiv(place);
         let latlng = {
           lat: place.lat,
@@ -619,6 +736,8 @@ export default {
         self.getBusList(latlng);
         self.getBikeList(latlng);
         self.getSchool(latlng);
+        if (self.burgerImgToggle) self.getBurger(latlng);
+        if (self.cafeImgToggle) self.getCafe(latlng);
         infowindow.close();
         let position = new kakao.maps.LatLng(place.lat, place.lng);
         self.map.panTo(position);
@@ -665,6 +784,7 @@ export default {
           content: content,
           xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
           yAnchor: 1.125, // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+          zIndex: 100,
         });
         self.overlays.push(overlay);
         overlay.setContent(content);
@@ -694,7 +814,7 @@ export default {
       contentEl.append(place.buildYear + "년 건축");
 
       let img = document.createElement("img");
-      img.src = require("@/assets/img/waiting.jpg");
+      img.src = require("@/assets/img/apart.jpg");
       imgEl.appendChild(img);
       let latlng = {
         lat: place.lat,
@@ -712,37 +832,38 @@ export default {
       this.transScore += 15 * this.subways.length;
       this.subLen = this.subways.length;
       this.chartData.datasets[0].data[0] = 15 * this.subLen;
-      let el = document.getElementById("transport-info-subway");
-      if (el.hasChildNodes()) this.removeAllChildNods(el);
-      for (let subway of this.subways) {
-        let data = document.createElement("div");
-        data.innerText = `(${subway.train})${subway.station}`;
-        el.append(data);
-      }
     },
     displayBus() {
       this.transScore += 3 * this.buses.length;
       this.busLen = this.buses.length;
       this.chartData.datasets[0].data[1] = 3 * this.busLen;
-      let el = document.getElementById("transport-info-bus");
-      if (el.hasChildNodes()) this.removeAllChildNods(el);
-      for (let i = 0; i < 10; i++) {
-        if (this.busLen <= i) break;
-        let data = document.createElement("div");
-        data.innerText = `(${this.buses[i].ars})${this.buses[i].station}`;
-        el.append(data);
-      }
     },
     displayBike() {
+      for (let i = 0; i < this.bikeMarkers.length; i++)
+        this.bikeMarkers[i].setMap(null);
+      this.bikeMarkers = [];
       this.transScore += this.bikes.length;
       this.bikeLen = this.bikes.length;
       this.chartData.datasets[0].data[2] = this.bikeLen;
-      let el = document.getElementById("transport-info-bike");
-      if (el.hasChildNodes()) this.removeAllChildNods(el);
-      for (let bike of this.bikes) {
-        let data = document.createElement("div");
-        data.innerText = `(따릉이)${bike.place}`;
-        el.append(data);
+      if (this.bikeImgToggle) {
+        for (let bike of this.bikes) {
+          let img =
+            "https://user-images.githubusercontent.com/63468607/143379825-406d6a8c-6942-4c53-9f74-b74cff41c432.png";
+          let icon = new kakao.maps.MarkerImage(
+            img,
+            new kakao.maps.Size(32, 32),
+            { offset: new kakao.maps.Point(16, 32) }
+          );
+          let marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(bike.lat, bike.lng),
+            image: icon,
+          });
+          marker.setMap(this.map);
+          //TODO 지하철역 반경 검색 추가해야됨
+          //TODO 지하철역 마우스오버 추가해야됨
+
+          this.bikeMarkers.push(marker);
+        }
       }
     },
     displayTotalSubway() {
@@ -878,7 +999,7 @@ export default {
       // console.log(this.middleSchool);
       // console.log(this.highSchool);
       // console.log(this.otherSchool);
-      this.displaySchool();
+      // this.displaySchool();
     },
     displaySchool() {
       let elementary = document.getElementById("elementarySchool");
@@ -886,17 +1007,22 @@ export default {
       let high = document.getElementById("highSchool");
       let other = document.getElementById("otherSchool");
       let array = [elementary, middle, high, other];
-      for (let arr of array) this.removeAllChildNods(arr);
+      for (let arr of array)
+        if (arr.hasChildNodes()) this.removeAllChildNods(arr);
 
       for (let i = 0; i < 5; i++) {
         let ele = document.createElement("div");
         let mid = document.createElement("div");
         let hig = document.createElement("div");
         let oth = document.createElement("div");
-        ele.innerText = `${this.elementarySchool[i].school} ${this.elementarySchool[i].distance}m`;
-        mid.innerText = `${this.middleSchool[i].school} ${this.middleSchool[i].distance}m`;
-        hig.innerText = `${this.highSchool[i].school} ${this.highSchool[i].distance}m`;
-        oth.innerText = `${this.otherSchool[i].school} ${this.otherSchool[i].distance}m`;
+        if (i < this.elementarySchool.length)
+          ele.innerText = `${this.elementarySchool[i].school} ${this.elementarySchool[i].distance}m`;
+        if (i < this.middleSchool.length)
+          mid.innerText = `${this.middleSchool[i].school} ${this.middleSchool[i].distance}m`;
+        if (i < this.highSchool.length)
+          hig.innerText = `${this.highSchool[i].school} ${this.highSchool[i].distance}m`;
+        if (i < this.otherSchool.length)
+          oth.innerText = `${this.otherSchool[i].school} ${this.otherSchool[i].distance}m`;
 
         elementary.append(ele);
         middle.append(mid);
@@ -904,249 +1030,163 @@ export default {
         other.append(oth);
       }
     },
+    togleBike() {
+      if (!this.bikeFlag) {
+        this.bikeFlag = !this.bikeFlag;
+        for (let i = 0; i < this.bikeMarkers.length; i++) {
+          this.bikeMarkers[i].setMap(this.map);
+        }
+      } else {
+        this.bikeFlag = !this.bikeFlag;
+        for (let i = 0; i < this.bikeMarkers.length; i++) {
+          this.bikeMarkers[i].setMap(null);
+        }
+      }
+    },
+    busToggle() {
+      if (!this.busImgToggle) {
+        this.busImgToggle = true;
+        document.getElementById("imgBus").src =
+          "https://user-images.githubusercontent.com/63468607/143327854-66e776ab-cc09-4cef-90db-ed5830c899cc.png";
+      } else {
+        this.busImgToggle = false;
+        document.getElementById("imgBus").src =
+          "https://user-images.githubusercontent.com/63468607/143327829-7371b76c-3c7f-4cc2-918c-dd2548eabfbb.png";
+      }
+    },
+    bikeToggle() {
+      if (!this.bikeImgToggle) {
+        this.bikeImgToggle = true;
+        document.getElementById("imgBike").src =
+          "https://user-images.githubusercontent.com/63468607/143382328-516a8d98-be08-4fcf-a3e2-ae413ef52b25.png";
+      } else {
+        this.bikeImgToggle = false;
+        document.getElementById("imgBike").src =
+          "https://user-images.githubusercontent.com/63468607/143382324-0120b078-eceb-40b2-8273-220e74240d79.png";
+      }
+    },
+    cafeToggle() {
+      if (!this.cafeImgToggle) {
+        this.cafeImgToggle = true;
+        document.getElementById("imgCafe").src =
+          "https://user-images.githubusercontent.com/63468607/143381913-561d5cf2-809f-4673-9946-d82d5dd650e9.png";
+      } else {
+        this.cafeImgToggle = false;
+        document.getElementById("imgCafe").src =
+          "https://user-images.githubusercontent.com/63468607/143381909-726252d8-4b25-48e5-aaeb-6f548a3be397.png";
+      }
+    },
+    burgerToggle() {
+      if (!this.burgerImgToggle) {
+        this.burgerImgToggle = true;
+        document.getElementById("imgBurger").src =
+          "https://user-images.githubusercontent.com/63468607/143374110-c6c98185-7df7-4356-98ee-3264b88256c7.png";
+      } else {
+        this.burgerImgToggle = false;
+        document.getElementById("imgBurger").src =
+          "https://user-images.githubusercontent.com/63468607/143374108-de810eac-4235-4252-b2a9-b5e000c1dc25.png";
+      }
+    },
+    makeCafeMarkers() {
+      if (!this.cafeImgToggle) return;
+      let index = new Map([
+        [
+          "이디야",
+          "https://user-images.githubusercontent.com/63468607/143341376-064a44c3-1268-496e-95da-bb142058e13c.png",
+        ],
+        [
+          "커피빈",
+          "https://user-images.githubusercontent.com/63468607/143348112-3aeb142b-0d81-4860-80fd-036d8a50cd5a.png",
+        ],
+        [
+          "투썸",
+          "https://user-images.githubusercontent.com/63468607/143346446-daf51849-3cd1-481d-8d1f-40638c3d2ea4.png",
+        ],
+        [
+          "할리스",
+          "https://user-images.githubusercontent.com/63468607/143349850-3dfde6c0-d6da-466d-86ef-88778c3da2e7.jpg",
+        ],
+        [
+          "스타벅스",
+          "https://user-images.githubusercontent.com/63468607/143368100-c534a6f5-a0a7-4984-9410-bf5265e4d67e.png",
+        ],
+        [
+          "빽다방",
+          "https://user-images.githubusercontent.com/63468607/143368955-23506eab-ee31-4a87-8a29-9f714b061571.png",
+        ],
+      ]);
+      let name = ["이디야", "커피빈", "투썸", "할리스", "스타벅스", "빽다방"];
+      let len = this.cafes.length;
+      for (let i = 0; i < len; i++) {
+        let cafe = this.cafes[i];
+        let shop;
+        for (let n of name) {
+          if (this.cafes[i].shopName.includes(n)) {
+            shop = n;
+            break;
+          }
+        }
+        console.log(shop);
+        let path = index.get(shop);
+        let icon = new kakao.maps.MarkerImage(
+          path,
+          new kakao.maps.Size(32, 32)
+        );
+        let marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(cafe.lat, cafe.lng),
+          image: icon,
+        });
+        marker.setMap(this.map);
+        this.cafeMarkers.push(marker);
+      }
+    },
+    makeBurgerMarkers() {
+      if (!this.burgerImgToggle) return;
+      let index = new Map([
+        [
+          "맥도날드",
+          "https://user-images.githubusercontent.com/63468607/143369816-2de4af97-7c54-4fef-8fbb-a2e4209dbd06.png",
+        ],
+        [
+          "롯데리아",
+          "https://user-images.githubusercontent.com/63468607/143370636-36bda1be-59ad-4aab-9066-baa620843229.png",
+        ],
+        [
+          "버거킹",
+          "https://user-images.githubusercontent.com/63468607/143370170-9654416b-af85-4d20-8436-e2fae6e31cf5.png",
+        ],
+        [
+          "맘스터치",
+          "https://user-images.githubusercontent.com/63468607/143370779-0b023d2b-ae5d-4536-acb6-89c4ba48ae91.png",
+        ],
+      ]);
+      let name = ["맥도날드", "롯데리아", "버거킹", "맘스터치"];
+      let len = this.burgers.length;
+      for (let i = 0; i < len; i++) {
+        let burger = this.burgers[i];
+        let shop;
+        for (let n of name) {
+          if (this.burgers[i].shopName.includes(n)) {
+            shop = n;
+            break;
+          }
+        }
+        console.log(shop);
+        let path = index.get(shop);
+        let icon = new kakao.maps.MarkerImage(
+          path,
+          new kakao.maps.Size(32, 32)
+        );
+        let marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(burger.lat, burger.lng),
+          image: icon,
+        });
+        marker.setMap(this.map);
+        this.burgerMarkers.push(marker);
+      }
+    },
   },
 };
-
-document.addEventListener("DOMContentLoaded", function() {});
-// document.getElementById("shopSearch").addEventListener("click", function() {
-//   if (!this.cafeFlag) {
-//     this.cafeFlag = true;
-//     for (let i = 0; i < this.cafeMarkers.length; i++) {
-//       this.cafeMarkers[i].setMap(this.map);
-//     }
-//   } else {
-//     this.cafeFlag = false;
-//     for (let i = 0; i < this.cafeMarkers.length; i++) {
-//       this.cafeMarkers[i].setMap(null);
-//     }
-//   }
-//   if (this.cafeMarkers.length > 0) {
-// } else {
-//   let serviceKey =
-//     "yQJmbxPKHfbveoouxPQICmXLoAexdytRO17wxg/wLWpCObZ80VVS/7bBYGPtH+K0tLxa5/23tWERGQOow9IV1Q==";
-//   let indsMclsCd = "Q12"; // 우선 카페만
-//   let numOfRows = 300;
-//   let radius = 1000;
-//   let dong = document.getElementById('dong').value;
-//   axios.get(
-//     "/map/hangjung",
-//     { dong: dong },
-//     function(data, status) {
-//       axios({
-//         url:
-//           "http://apis.data.go.kr/B553077/api/open/sdsc2/storeListInRadius",
-//         method: "GET",
-//         data: {
-//           serviceKey: serviceKey,
-//           numOfRows: numOfRows,
-//           radius: radius,
-//           cx: cx,
-//           cy: cy,
-//           indsMclsCd: indsMclsCd,
-//         },
-//         dataType: "xml",
-//         success: function(response) {
-//           console.log(response);
-//           makeShop(response);
-//           // 함수 호출
-//         },
-//         error: function(xhr, status, msg) {
-//           console.log("상태값 : " + status + " Http에러메시지 : " + msg);
-//         },
-//       });
-//     },
-//     "json"
-//   );
-//   }
-// });
-
-// document
-//   .getElementById("inspectorSearch")
-//   .addEventListener("click", function() {
-//     if (!inspectorFlag) {
-//       inspectorFlag = true;
-//       for (var i = 0; i < coronaMarkers.length; i++) {
-//         coronaMarkers[i].setMap(map);
-//       }
-//     } else {
-//       inspectorFlag = false;
-//       for (var i = 0; i < coronaMarkers.length; i++) {
-//         coronaMarkers[i].setMap(null);
-//       }
-//     }
-//   });
-
-// document.getElementById("bikeSearch").addEventListener("click", function() {
-//   if (!bikeFlag) {
-//     bikeFlag = true;
-//     for (var i = 0; i < bikeMarkers.length; i++) {
-//       bikeMarkers[i].setMap(map);
-//     }
-//   } else {
-//     bikeFlag = false;
-//     for (var i = 0; i < bikeMarkers.length; i++) {
-//       bikeMarkers[i].setMap(null);
-//     }
-//   }
-// });
-// });
-
-// function makeInspector(jsonData) {
-//   let hospitalImgSrc = "/assets/img/hospital.png";
-//   let imgSize = new kakao.maps.Size(44, 50);
-//   let imgOption = { offset: new kakao.maps.Point(22, 50) };
-//   let hospitalImg = new kakao.maps.MarkerImage(
-//     hospitalImgSrc,
-//     imgSize,
-//     imgOption
-//   );
-
-//   $.each(jsonData, function(index, vo) {
-//     let tmpLat = vo.lat;
-//     let tmpLng = vo.lng;
-//     let tmpName = vo.gigwanName;
-//     let tmpAddress = vo.gigwanAddress;
-//     let coords = new kakao.maps.LatLng(tmpLat, tmpLng);
-//     var marker = new kakao.maps.Marker({
-//       position: coords,
-//       image: hospitalImg,
-//     });
-//     var infowindow = new kakao.maps.InfoWindow({
-//       content:
-//         '<div class="infoFont" style="width:300px;text-align:center;padding:6px 0;">' +
-//         tmpName +
-//         "<br/><span>" +
-//         tmpAddress +
-//         "</span></div>",
-//     });
-//     kakao.maps.event.addListener(
-//       marker,
-//       "mouseover",
-//       makeOverListener(map, marker, infowindow)
-//     );
-//     kakao.maps.event.addListener(
-//       marker,
-//       "mouseout",
-//       makeOutListener(infowindow)
-//     );
-
-//     coronaMarkers.push(marker);
-//     coronaInfowindows.push(infowindow);
-//   }); // each
-// }
-
-// // "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다
-
-// // "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다
-// function removeMarker() {
-//   let len = markers.length;
-//   if (markers.length < cafeMarkers.length) len = cafeMarkers.length;
-//   for (var i = 0; i < len; i++) {
-//     if (i < markers.length) {
-//       infowindows[i].close();
-//       markers[i].setMap(null);
-//     }
-//     if (i < cafeMarkers.length) {
-//       cafeInfowindows[i].close();
-//       cafeMarkers[i].setMap(null);
-//     }
-//   }
-//   markers = [];
-//   cafeMarkers = [];
-//   shopFlag = false;
-// }
-
-// function removeInspector() {
-//   let len = coronaMarkers.length;
-//   for (var i = 0; i < len; i++) {
-//     coronaInfowindows[i].close();
-//     coronaMarkers[i].setMap(null);
-//   }
-//   coronaMarkers = [];
-//   inspectorFlag = false;
-// }
-
-// function removeBike() {
-//   let len = bikeMarkers.length;
-//   for (var i = 0; i < len; i++) {
-//     bikeInfowindows[i].close();
-//     bikeMarkers[i].setMap(null);
-//   }
-//   bikeMarkers = [];
-//   bikeFlag;
-// }
-
-// function makeBike(jsonData) {
-//   let bikeImgSrc = "/assets/img/seoulbike.png";
-//   let imgSize = new kakao.maps.Size(44, 50);
-//   let imgOption = { offset: new kakao.maps.Point(22, 50) };
-//   let bikeImg = new kakao.maps.MarkerImage(bikeImgSrc, imgSize, imgOption);
-
-//   $.each(jsonData, function(index, vo) {
-//     let tmpLat = vo.lat;
-//     let tmpLng = vo.lng;
-//     let tmpName = vo.place;
-//     let tmpCount = vo.maxcount;
-//     let tmpType = vo.btype;
-//     let coords = new kakao.maps.LatLng(tmpLat, tmpLng);
-//     var marker = new kakao.maps.Marker({
-//       position: coords,
-//       image: bikeImg,
-//     });
-//     var infowindow = new kakao.maps.InfoWindow({
-//       content:
-//         '<div class="infoFont" style="width:300px;text-align:center;padding:6px 0;">' +
-//         tmpName +
-//         "<br/><span> 거치대 수 : " +
-//         tmpCount +
-//         " 타입 : " +
-//         tmpType +
-//         "</span></div>",
-//     });
-//     kakao.maps.event.addListener(
-//       marker,
-//       "mouseover",
-//       makeOverListener(map, marker, infowindow)
-//     );
-//     kakao.maps.event.addListener(
-//       marker,
-//       "mouseout",
-//       makeOutListener(infowindow)
-//     );
-
-//     bikeMarkers.push(marker);
-//     bikeInfowindows.push(infowindow);
-//   }); // each
-// }
-// function makeDetailElement(data) {
-//   let aptData = data.split(",");
-//   removeDetail();
-//   var str = `
-// 	<div class = "apt-detail-child">
-// 	<span class = "apt-detail-title">
-// 	   아파트 상세 정보
-// 	</span>
-// 	<button onclick="removeDetail()">x</button>
-// 	<ul>
-// 	   <li>아파트 이름 : ${aptData[0]}</li>
-// 	   <li>건축년도  : ${aptData[1]}</li>
-// 	   <li>거래금액 : ${aptData[2]}</li>
-// 		<li>층 수 : ${aptData[3]}층</li>
-// 	</ul>
-//  </div>
-// 	`;
-//   let aptDetail = document.getElementById("aptDetail");
-//   aptDetail.appendChild(str);
-//   aptDetail.style.display = "block";
-// }
-// function removeDetail() {
-//   let aptDetail = document.getElementById("aptDetail");
-//   let aptDetailChild = document.getElementsByClassName("apt-detail-child");
-//   aptDetailChild.remove();
-//   aptDetail.style.display = "none";
-// }
-
-// function
 </script>
 
 <style>
@@ -1195,6 +1235,8 @@ document.addEventListener("DOMContentLoaded", function() {});
 }
 .overlay_info img {
   vertical-align: top;
+  width: 72px;
+  height: 72px;
 }
 .overlay_info .address {
   font-size: 12px;
@@ -1423,13 +1465,19 @@ document.addEventListener("DOMContentLoaded", function() {});
   border-radius: 5px;
   border: rgb(224, 224, 224) solid 1px;
 }
-
-/* .top {
-  margin-top: 0px;
-} */
-/* <div id="detail-img-section"></div>
-          <div id="detail-apt-section"></div>
-          <div id="detail-transport-section"></div>
-          <div id="detail-img-section"></div>
-          <div id="detail-img-section"></div> */
+#imagebox_wrap {
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.9);
+  border: rgb(224, 224, 224) solid 1px;
+  border-radius: 5px;
+}
+#imagebox_wrap img {
+  border: black solid 1px;
+  border-collapse: collapse;
+  width: 48px;
+  height: 48px;
+}
 </style>
